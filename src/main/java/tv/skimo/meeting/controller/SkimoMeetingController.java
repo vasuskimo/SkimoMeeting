@@ -1,6 +1,7 @@
 package tv.skimo.meeting.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tv.skimo.meeting.lib.AssetInformation;
 import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
+import tv.skimo.meeting.model.Skimo;
 import tv.skimo.meeting.services.StorageService;
 
 @Controller
@@ -77,6 +80,23 @@ public class SkimoMeetingController {
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
 		return ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping("/skimo/{assetId}")
+	public String viewMedia( Model model )
+	{
+		ArrayList<Skimo> skimoList = new ArrayList<Skimo>()
+		{
+			{
+				add( new Skimo( "../8fc4e728/img/frames1.jpg", "../8fc4e728/source.mp4"));
+				add( new Skimo( "../8fc4e728/img/frames2.jpg", "../8fc4e728/source.mp4"));
+				add( new Skimo( "../8fc4e728/img/frames3.jpg", "../8fc4e728/source.mp4"));
+				add( new Skimo( "../8fc4e728/img/frames4.jpg", "../8fc4e728/source.mp4"));
+			}
+		};
+
+		model.addAttribute( "mediaList", skimoList );
+		return "index";
 	}
 
 }

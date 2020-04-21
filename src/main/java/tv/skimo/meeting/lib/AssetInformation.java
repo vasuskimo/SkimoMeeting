@@ -8,8 +8,8 @@ import java.nio.file.StandardCopyOption;
 public class AssetInformation
 { 
 	// This method finds the crc32 code of the uploaded file
-	// It creates an assetid directory under content directory
-	// It creates img directory under content directory
+	// It creates an assetid directory under public directory
+	// It creates img directory under public directory
 	// It copies the uploaded file under the assetid directory
     public static String create(String dir, String assetName)
     {
@@ -24,15 +24,15 @@ public class AssetInformation
 		}
 	    String assetId = Long.toHexString(crc);
 	    
-	    File file = new File("content/" +assetId);
+	    File file = new File("public/" +assetId);
 	    boolean result = file.mkdir(); 
 	    if(!result)
 	    	return "present";
-	    file = new File("content/" + assetId+"/img");
+	    file = new File("public/" + assetId+"/img");
 	    result = file.mkdir();
 	    
         File source = new File(dir + assetName);
-        File dest = new File("content/" + assetId + "/" + assetName);
+        File dest = new File("public/" + assetId + "/source.mp4");
 
         try 
         {
