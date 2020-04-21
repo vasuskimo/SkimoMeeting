@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="/js/glide.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+  </head>
+  <body>
+    <div class="images glide">
+      <div class="glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+
+          <tr th:each="skimo:${skimos}">
+            <li class="glide__slide ">
+              <img th:src="${skimo.img}" alt="poster">
+              <div class="skimo">
+                  <a href=th:text="${skimo.url}" target="_blank">
+                      <img src="img/skimologo.png" alt="skimo">
+                  </a>
+              </div>
+            </li>
+          </tr>          
+        </ul>
+      </div>
+
+      <div class="glide__arrows" data-glide-el="controls">
+        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+            <img src="/img/line-angle-left.png" alt="">
+        </button>
+        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+            <img src="/img/line-angle-right.png" alt="">
+        </button>
+      </div>
+    </div>
+
+    <script>
+      new Glide(".images",{
+        type: 'carousel',
+        // Change the desktop per view here:
+        perView: 3,
+        focusAt: 'center',
+        // Change the spacing here
+        gap: 20,
+        breakpoints: {
+            // Change the tablet per view here:
+            1200:{
+                perView: 3
+            },
+            // Change the mobile per view here:
+            800:{
+                perView: 1
+            }
+        }
+      }).mount();
+    </script>
+  </body>
+</html>
