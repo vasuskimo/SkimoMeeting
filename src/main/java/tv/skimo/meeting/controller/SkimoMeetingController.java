@@ -1,5 +1,6 @@
 package tv.skimo.meeting.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -20,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.skimo.meeting.lib.AssetInformation;
 import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
@@ -31,6 +33,9 @@ import tv.skimo.meeting.services.StorageService;
 public class SkimoMeetingController {
 
 	private final StorageService storageService;
+	
+    private static final Logger LOGGER=LoggerFactory.getLogger(SkimoMeetingController.class);
+
 
 	@Autowired
 	public SkimoMeetingController(StorageService storageService) {
@@ -83,20 +88,26 @@ public class SkimoMeetingController {
 	}
 	
 	@GetMapping("/skimo/{assetId}")
-	public String viewMedia( Model model )
+	public String viewMedia( Model model,@PathVariable(name="assetId") String assetId )
 	{
-		ArrayList<Skimo> skimoList = new ArrayList<Skimo>()
+		File dir = new File("public/" + assetId);
+		
+		if(dir.exists())
 		{
+			ArrayList<Skimo> skimoList = new ArrayList<Skimo>()
 			{
-				add( new Skimo( "../8fc4e728/img/frames1.jpg", "../8fc4e728/source.mp4"));
-				add( new Skimo( "../8fc4e728/img/frames2.jpg", "../8fc4e728/source.mp4"));
-				add( new Skimo( "../8fc4e728/img/frames3.jpg", "../8fc4e728/source.mp4"));
-				add( new Skimo( "../8fc4e728/img/frames4.jpg", "../8fc4e728/source.mp4"));
-			}
-		};
+				{
+					add( new Skimo( "../8fc4e728/img/frames1.jpg", "../8fc4e728/source.mp4"));
+					add( new Skimo( "../8fc4e728/img/frames2.jpg", "../8fc4e728/source.mp4"));
+					add( new Skimo( "../8fc4e728/img/frames3.jpg", "../8fc4e728/source.mp4"));
+					add( new Skimo( "../8fc4e728/img/frames4.jpg", "../8fc4e728/source.mp4"));
+				}
+			};
+			model.addAttribute( "mediaList", skimoList );
+			return "index";
+		}
+		return "404";
 
-		model.addAttribute( "mediaList", skimoList );
-		return "index";
 	}
 
 }
