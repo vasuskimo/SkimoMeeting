@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.skimo.meeting.lib.AssetInformation;
+import tv.skimo.meeting.lib.EngineStatus;
 import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.model.Skimo;
@@ -38,25 +38,25 @@ public class SkimoMeetingController {
 
 
 	@Autowired
-	public SkimoMeetingController(StorageService storageService) {
+	public SkimoMeetingController(StorageService storageService)
+	{
 		this.storageService = storageService;
 	}
 
 	@GetMapping("/")
-	public String listUploadedFiles(Model model) throws IOException {
-
+	public String listUploadedFiles(Model model) throws IOException 
+	{
 		model.addAttribute("files", storageService.loadAll().map(
 				path -> MvcUriComponentsBuilder.fromMethodName(SkimoMeetingController.class,
 						"serveFile", path.getFileName().toString()).build().toUri().toString())
 				.collect(Collectors.toList()));
-
 		return "uploadForm";
 	}
 
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) 
+	{
 		Resource file = storageService.loadAsResource(filename);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -64,26 +64,39 @@ public class SkimoMeetingController {
 
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) {
-
-		storageService.store(file);
-		String assetId = AssetInformation.create("./upload-dir/" , file.getOriginalFilename());
-		
-		if(!assetId.equalsIgnoreCase("present"))
+			RedirectAttributes redirectAttributes) 
+	{		
+		try 
 		{
-			SceneDetector.generateFirst(file.getOriginalFilename(), assetId);
-			SceneDetector.generateThumbnail(file.getOriginalFilename(), assetId);
-			SceneDetector.generateSkimo(file.getOriginalFilename(), assetId);
-		   redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename() + "!");
-		}
-		else
-			redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
+			if(EngineStatus.isBusy())
+					redirectAttributes.addFlashAttribute("message", "Skimo Engine is currently busy. Please try after sometime");
+			else
+			{
+				storageService.store(file);
+				String assetId = AssetInformation.create("./upload-dir/" , file.getOriginalFilename());
 
+				if(!assetId.equalsIgnoreCase("present"))
+				{
+					SceneDetector.generateFirst(file.getOriginalFilename(), assetId);
+					SceneDetector.generateThumbnail(file.getOriginalFilename(), assetId);
+					SceneDetector.generateSkimo(file.getOriginalFilename(), assetId);
+				    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
+				}
+				else
+					redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
+			}
+		} 
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "redirect:/";
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)
-	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) 
+	{
 		return ResponseEntity.notFound().build();
 	}
 	
@@ -107,7 +120,6 @@ public class SkimoMeetingController {
 			return "index";
 		}
 		return "404";
-
 	}
 
 }
