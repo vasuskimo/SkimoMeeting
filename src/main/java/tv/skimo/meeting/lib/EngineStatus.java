@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class EngineStatus 
-{
+{ 
    public static boolean isBusy() throws IOException 
    {
 		String process,s="";

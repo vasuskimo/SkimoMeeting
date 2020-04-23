@@ -5,7 +5,7 @@ public class Skimo implements Serializable
 {
 	private String imageUrl;
 	private String videoUrl;
-
+ 
 	public Skimo()
 	{
 	}

@@ -3,11 +3,8 @@ package tv.skimo.meeting.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -159,7 +156,7 @@ public class SkimoMeetingController {
 					i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
 				}
 			}
-		    File imgDir = new File("public/" + "8fc4e728" +"/img");
+		    File imgDir = new File("public/" + assetId +"/img");
 			List<String> imgList = FileSorter.sort(imgDir);
 			
 			File videoFile = new File(videoResource);
@@ -168,8 +165,8 @@ public class SkimoMeetingController {
 			ArrayList<Skimo> skimoList = new ArrayList<>();
 			List<String> finalImgList = imgList;
 			
-			List<String> updatedTimeCodeList =new ArrayList<>();
-			List<String> updatedImgList = new ArrayList<>();
+			List<String> updatedTimeCodeList =new ArrayList<>(1000);
+			List<String> updatedImgList = new ArrayList<>(1000);
 
 			for(int  i=0; i < updatedList.size();  i++)
 			{

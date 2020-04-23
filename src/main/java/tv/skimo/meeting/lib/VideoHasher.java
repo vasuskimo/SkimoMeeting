@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.CRC32;
- 
+  
 public class VideoHasher 
 {
    public static long crc32(String filepath) throws IOException 
