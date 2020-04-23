@@ -13,6 +13,16 @@
 <div class="images glide">
     <div class="glide__track" data-glide-el="track">
         <ul class="glide__slides">
+        	
+        	<li class="glide__slide">
+                <img alt="poster" th:attr="src=@{${first_item.imageUrl}}">
+                <div class="skimo">
+                    <a target="_blank" th:attr="href=@{${first_item.videoUrl}}">
+                        <img alt="skimo" src="../img/skimologo.png">
+                    </a>
+                </div>
+            </li>
+        
             <li class="glide__slide" th:each="media: ${mediaList}">
                 <img alt="poster" th:attr="src=@{${media.imageUrl}}">
                 <div class="skimo">

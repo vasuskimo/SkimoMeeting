@@ -2,8 +2,16 @@ package tv.skimo.meeting.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -20,10 +28,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.skimo.meeting.lib.AssetInformation;
 import tv.skimo.meeting.lib.EngineStatus;
+import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.model.Skimo;
@@ -34,8 +44,9 @@ public class SkimoMeetingController {
 
 	private final StorageService storageService;
 	
-    private static final Logger LOGGER=LoggerFactory.getLogger(SkimoMeetingController.class);
+    private static final Logger logger=LoggerFactory.getLogger(SkimoMeetingController.class);
 
+	private String baseUrl;
 
 	@Autowired
 	public SkimoMeetingController(StorageService storageService)
@@ -104,20 +115,80 @@ public class SkimoMeetingController {
 	public String viewMedia( Model model,@PathVariable(name="assetId") String assetId )
 	{
 		File dir = new File("public/" + assetId);
+		String timeCodeResource = dir + "/timecodes.txt";
+		String videoResource = dir  + "/source.mp4";
+		String imgResource = dir + "/img";
+		
+		try {
+			if(EngineStatus.isRunningSkimo(assetId))
+			{
+				return "busy.html";
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		if(dir.exists())
 		{
-			ArrayList<Skimo> skimoList = new ArrayList<Skimo>()
+			List<String> timeCodeList;
+			try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
 			{
+				timeCodeList = lines.collect( Collectors.toList() );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+				return "error.html";
+			}
+			timeCodeList.add(0,"0.0");
+
+			List<Integer> updatedList = new ArrayList<>();
+			String initVal = timeCodeList.get( 0 );
+			if ( initVal == null )
+			{
+				return "error.html";
+			}
+			updatedList.add(0);
+			for ( int i = 0; i < timeCodeList.size(); i++ )
+			{ 
+				if ( ( Double.parseDouble( timeCodeList.get( i ) ) - Double.parseDouble( initVal ) ) > 30 )
 				{
-					add( new Skimo( "../8fc4e728/img/frames1.jpg", "../8fc4e728/source.mp4"));
-					add( new Skimo( "../8fc4e728/img/frames2.jpg", "../8fc4e728/source.mp4"));
-					add( new Skimo( "../8fc4e728/img/frames3.jpg", "../8fc4e728/source.mp4"));
-					add( new Skimo( "../8fc4e728/img/frames4.jpg", "../8fc4e728/source.mp4"));
+					updatedList.add(i );
+					initVal = timeCodeList.get( i );
+					i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
 				}
-			};
+			}
+		    File imgDir = new File("public/" + "8fc4e728" +"/img");
+			List<String> imgList = FileSorter.sort(imgDir);
+			
+			File videoFile = new File(videoResource);
+			String videoFileName = videoFile.getName();
+			baseUrl = "../" +assetId  + "/";
+			ArrayList<Skimo> skimoList = new ArrayList<>();
+			List<String> finalImgList = imgList;
+			
+			List<String> updatedTimeCodeList =new ArrayList<>();
+			List<String> updatedImgList = new ArrayList<>();
+
+			for(int  i=0; i < updatedList.size();  i++)
+			{
+				int ix = updatedList.get(i);
+				updatedTimeCodeList.add(timeCodeList.get(ix).toString());
+				updatedImgList.add(finalImgList.get(ix).toString());
+			}
+			
+			IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
+				double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
+				int videoTime = ( int ) v;
+				skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ) ) );
+			} );
+
+			Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) );
+			model.addAttribute("first_item",  first_item );			
 			model.addAttribute( "mediaList", skimoList );
-			return "index";
+			
+			return "index.html";
 		}
 		return "404";
 	}
