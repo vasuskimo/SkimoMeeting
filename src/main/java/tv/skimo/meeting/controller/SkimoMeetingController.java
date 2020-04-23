@@ -73,15 +73,19 @@ public class SkimoMeetingController {
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) 
-	{		
+	{	
+		String assetId = null;
 		try 
 		{
 			if(EngineStatus.isBusy())
-					redirectAttributes.addFlashAttribute("message", "Skimo Engine is currently busy. Please try after sometime");
+			{
+				redirectAttributes.addFlashAttribute("message", "Skimo Engine is currently busy. Please try after sometime");
+				return "redirect:/";
+			}
 			else
 			{
 				storageService.store(file);
-				String assetId = AssetInformation.create("./upload-dir/" , file.getOriginalFilename());
+				assetId = AssetInformation.create("./upload-dir/" , file.getOriginalFilename());
 
 				if(!assetId.equalsIgnoreCase("present"))
 				{
@@ -89,6 +93,7 @@ public class SkimoMeetingController {
 					SceneDetector.generateThumbnail(file.getOriginalFilename(), assetId);
 					SceneDetector.generateSkimo(file.getOriginalFilename(), assetId);
 				    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
+					return "redirect:/";
 				}
 				else
 					redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
@@ -99,7 +104,8 @@ public class SkimoMeetingController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "redirect:/";
+		String retVal = "redirect:/" + "skimo/" + assetId;
+		return retVal;
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)
