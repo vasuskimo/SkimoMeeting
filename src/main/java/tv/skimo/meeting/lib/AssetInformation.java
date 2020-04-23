@@ -7,11 +7,8 @@ import java.nio.file.StandardCopyOption;
 
 public class AssetInformation
 { 
-	// This method finds the crc32 code of the uploaded file
-	// It creates an assetid directory under public directory
-	// It creates img directory under public directory
-	// It copies the uploaded file under the assetid directory
-    public static String create(String dir, String assetName)
+	// This method computes the crc32 code of the uploaded file
+    public static String createHash(String dir, String assetName)
     {
 	    long crc = 0;
 		try 
@@ -24,10 +21,18 @@ public class AssetInformation
 		}
 	    String assetId = Long.toHexString(crc);
 	    
+	    return assetId;
+    }
+	
+	// This method creates an assetid directory under public directory
+	// It creates img directory under public directory
+	// It copies the uploaded file under the assetid directory
+    public static boolean createDirs(String dir, String assetId, String assetName)
+    {
 	    File file = new File("public/" +assetId);
 	    boolean result = file.mkdir(); 
 	    if(!result)
-	    	return "present";
+	    	return false;
 	    file = new File("public/" + assetId+"/img");
 	    result = file.mkdir();
 	    
@@ -43,11 +48,12 @@ public class AssetInformation
 			e.printStackTrace();
 		}
 	      
-	    return assetId;  	
+	    return true;  	
     } 
     
     public static void main(String[] args) 
     { 
-      System.out.println(AssetInformation.create("EJUXlL3rHzA", "a.mp4"));
+      System.out.println(AssetInformation.createHash("./upload-dir/","a.mp4"));
+      System.out.println(AssetInformation.createDirs("./upload-dir/","EJUXlL3rHzA", "a.mp4"));
     } 
 } 

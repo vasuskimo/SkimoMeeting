@@ -85,16 +85,16 @@ public class SkimoMeetingController {
 			else
 			{
 				storageService.store(file);
-				assetId = AssetInformation.create("./upload-dir/" , file.getOriginalFilename());
+				assetId = AssetInformation.createHash("./upload-dir/" , file.getOriginalFilename());
 
-				if(!assetId.equalsIgnoreCase("present"))
+				if(AssetInformation.createDirs("./upload-dir/", assetId, file.getOriginalFilename()))
 				{
 					SceneDetector.generateFirst(file.getOriginalFilename(), assetId);
 					SceneDetector.generateThumbnail(file.getOriginalFilename(), assetId);
 					SceneDetector.generateSkimo(file.getOriginalFilename(), assetId);
 				    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
-					return "redirect:/";
-				}
+					String retVal = "redirect:/" + "skimo/" + assetId;
+					return retVal;				}
 				else
 					redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
 			}
