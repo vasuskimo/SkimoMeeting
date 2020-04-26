@@ -1,7 +1,9 @@
 package tv.skimo.meeting.controller;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.skimo.meeting.lib.AssetInformation;
@@ -33,6 +36,8 @@ import tv.skimo.meeting.lib.EngineStatus;
 import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
+import tv.skimo.meeting.lib.ThymeLeafConfig;
+import tv.skimo.meeting.lib.Zipper;
 import tv.skimo.meeting.model.Skimo;
 import tv.skimo.meeting.services.StorageService;
 
@@ -44,6 +49,8 @@ public class SkimoMeetingController {
     private static final Logger logger=LoggerFactory.getLogger(SkimoMeetingController.class);
 
 	private String baseUrl;
+	
+    @Autowired private TemplateEngine templateEngine;
 
 	@Autowired
 	public SkimoMeetingController(StorageService storageService)
@@ -64,7 +71,7 @@ public class SkimoMeetingController {
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) 
-	{
+	{ 
 		Resource file = storageService.loadAsResource(filename);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -79,7 +86,7 @@ public class SkimoMeetingController {
 		{
 			if(EngineStatus.isBusy())
 			{
-				redirectAttributes.addFlashAttribute("message", "Skimo Engine is currently busy. Please try after sometime");
+				redirectAttributes.addFlashAttribute("message", "Skimo Engine is busy. Please try again");
 				return "redirect:/";
 			}
 			else
@@ -123,10 +130,8 @@ public class SkimoMeetingController {
 		String imgResource = dir + "/img";
 		
 		try {
-			if(EngineStatus.isRunningSkimo(assetId))
-			{
-				return "busy.html";
-			}
+				if(EngineStatus.isRunningSkimo(assetId))
+					return "busy.html";
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -191,7 +196,33 @@ public class SkimoMeetingController {
 			model.addAttribute("first_item",  first_item );			
 			model.addAttribute( "mediaList", skimoList );
 			
-			return "index.html";
+			
+		    Context context = new Context();
+		    context.setVariable("first_item", first_item);
+		    context.setVariable("mediaList", skimoList);
+
+	        Writer writer = null;
+	        File indexFile = new File("public/" + assetId + "/index.html");
+	        if(!indexFile.exists())
+	        {
+	            String[] skimoFiles = {"public/" + assetId};
+	            String zipFile = "upload-dir/" + assetId + ".zip";
+	            Zipper zipUtil = new Zipper();
+	        	try 
+	        	{
+	        		writer = new FileWriter("public/" + assetId + "/index.html");
+	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("index.html", context));
+	        		writer.close();
+	                zipUtil.zip(skimoFiles, zipFile);
+	        	} 
+	        	catch (Exception e) 
+	        	{
+	        		// TODO Auto-generated catch block
+	        		e.printStackTrace();
+	        	}
+	        	
+	        }
+			return "index";
 		}
 		return "404";
 	}

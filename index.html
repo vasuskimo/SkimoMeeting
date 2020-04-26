@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Skimo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="img/favicon.ico" />
+	<link rel="stylesheet" href="css/main.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab:400,600,700' rel='stylesheet' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44595137-1', 'skimo.tv');
+  ga('send', 'pageview');
+
+</script>
+  <script>
+function addParam() {
+
+                var url = "http://demo.skimo.tv:8080/api/skimo/";
+                document.getElementById("myForm").setAttribute('action', url);
+
+            }
+</script>
+
+</head>
+<body class="home page page-template page-template-template-notitle-php">
+
+  <!--[if lt IE 8]>
+    <div class="alert alert-warning">
+      You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.    </div>
+  <![endif]-->
+
+  <header class="banner navbar navbar-default navbar-fixed-top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://skimo.tv"><img src="img/logo.png" alt="Skimo"></a>
+      </div>
+
+    </div>
+  </header>
+
+<br/>
+<br/>
+    <div class="wrap" role="document">
+
+      <div class="band band-default">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8">
+              <h2>Skim the Video</h2>
+            <form  id="myForm" action="#" method="post">
+            <input type='hidden' id="version" name="version" value='1.0' />
+            <input type='hidden' id="outputtype" name="outputtype" value='summary' />
+            <input type='hidden' id="ingesttype" name="ingesttype" value='http' />
+            <input type='hidden' id="client" name="client" value='web' />
+
+            <div class="form-group">
+            <label for="Title" >Title:</label>
+            <input type="textarea" required class="form-control" id="title" name="title" placeholder="Title of the video">
+            </div>
+
+            <div class="form-group">
+            <label for="Ingest URL">Source Video:</label>
+            <input type="url" required  class="form-control" id="ingesturl" name="ingesturl" placeholder="URL of the source video: YouTube, Vimeo, etc.,">
+            </div>
+
+            <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" required class="form-control" id="email" name="email" data-toggle="tooltip" data-placement="bottom" title="URL of your video summary will be sent to this email address,generally within 5 minutes.  This delivery URL will remain valid for 24 hours and is used only for the purpose of notification." placeholder="Email for notification purposes only">
+            </div>
+            <input type='submit' class="btn btn-danger btn-lg pull-right" name='Generate Skimo' value='Generate Skimo' onclick='addParam()' />
+            <br/>
+        </form>
+
+            </div>
+
+          </div>
+        </div>
+      </div
+      <div class="band band-default">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-4">
+            <a href="http://demo.skimo.tv:8080">
+              <img width="200" height="200" src="img/skimologo.png" alt="Skimo Engine" class="img-responsive img-thumbnail align left">
+            </a>
+            </div>
+            <div class="col-sm-8">
+              <h2>What is Skimo?</h2>
+             <p>Skimo lets you skim the video, any long video, automatically and fast. To see Skimo in action, choose any long-form video in any language and request to create a "Skimo" which is a 3-minute video highlights, of the points of interest, of the video and we will notify you over email, when the Skimo is ready to watch.</p> 
+ <p>For 1/2-hour TV shows, the Skimo created is 3-minutes long. For videos, longer than that, the Skimo length is proportional to the duration of the video.</p>
+
+              <h2>Skimo Engine</h2>
+<p>Skimo Engine is a video summarization and indexing engine, that uses advanced machine learning/computer vision algorithms, to automatically detect points of interest, based on the genre of the video, regardless of the language.</p>
+	      <p>Skimo takes a unique approach, in determining the points of interest in a video, by  audio,video and closed-caption analysis </p> 
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="band band-default">
+        <div class="container">
+          <div class="row">
+            
+            <div class="col-sm-4">
+                <img src="img/however.jpg" alt="Devices" class="img-responsive img-thumbnail">
+            </div>
+        
+            <div class="col-sm-8">
+              <h2>Skimo Catchup TV and VOD Discovery Solution</h2>
+              <p>TV Shows are being watched, whenever consumers want to and not necessarily at the appointed time, wherever they prefer to and not necessarily in the living room, however they like and not just the big screen. 
+</p>
+              <p>This provides the ability for viewers to watch video “however much” they want to, ranging from a single episode to binge-watch, i.e., watch multiple episodes at once.</p>
+              <p>We decided to push this “However much” trend to the extreme, by providing the ability for viewers to “catch-up” missed episodes, super fast.</p>
+              <p> Skimo Catch up TV and VOD Discovery Solution for Pay TV Operators, lets their subscribers rapidly catch-up DVR Recordings and TV Playbacks.
+It also enables Operators, a new and unique way to sample and discover VOD Assets, before VOD consumers decide to buy a TV Show episode, a "Google Books for TV Shows".</p>
+              <h2>Skimo In-Program Contextual Advertising Solution</h2>
+              <p> Skimo ID provides branding and cuepoints metadata. Branding is designed to improve TV Show engagement.  Branding for a TV show, includes such things as trivia, polls and quizzes. Cuepoints provide the ability to the operator to serve banner ads, based on the "objects of interest" mentioned in the TV Show.  
+            </div>
+
+      <div class="band band-default">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-4">
+                <img src="img/slider/discover.jpg" alt="Devices" class="img-responsive img-thumbnail align-center">
+            </div>
+            <div class="col-sm-8">
+              <h2>Skimo Cuepoints Solution</h2>
+<p>Most Online Videos that you watch have an ad-supported model. But, you would see that the ads appear at a regular interval and would cut abruptly in the middle of a sentence after which a mid-roll ad is shown. The alternative to this bad user experience, is manually cherry-picking where to serve ads. This manual process is both laborious and time-consuming.  With the Skimo Cuepoints solution, the video is analyzed by the Skimo Engine and cuepoints are determined automatically in a matter of minutes.</p>              
+            </div>
+          </div>
+        </div>
+            </div>
+          </div>
+        </div>
+      </div>            
+                
+    </div><!-- /.wrap -->
+
+<footer class="content-info" role="contentinfo">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8">
+        <ul id="menu-footer" class="footer-nav"><li class="active menu-home"><a href="/">Home</a></li>
+          <li class="menu-about-skimo"><a href="about.html">About Skimo</a></li>
+          <li class="menu-about-skimo"><a href="copyright.html">Copyright</a></li>
+          <li class="menu-about-skimo"><a href="privacy.html">Privacy Policy</a></li>
+          <li class="menu-about-skimo"><a href="terms.html">Terms of use</a></li>
+          <li class="menu-the-science"><a href="http://api.skimo.tv">Enterprise</a></li>
+          <li class="menu-terms-of-use"><a href="SkimoLongView.pdf">Skimo Long View</a></li>
+        </ul>
+        <br>
+        
+        <a href="https://www.facebook.com/skimotv" title="Visit our page"><img src="img/facebook.png" alt="Like us on Facebook"></a>
+        <a href="https://www.twitter.com/skimotv" title="Follow us on Twitter"><img src="img/twitter.png" alt="Twitter"></a>
+      </div>
+      
+      <div class="col-sm-4 text-right">
+        <p><small>&copy; 2016 Skimo TV, Inc, Sunnyvale, California, USA.  All rights reserved.</small></p>
+      </div>
+
+    </div>
+  </div>
+</footer>
+  
+
+  <script type='text/javascript' src="../js/jquery.js"></script>
+  <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+</body>
+</html>

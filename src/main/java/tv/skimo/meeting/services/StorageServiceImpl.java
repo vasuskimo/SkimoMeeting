@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class StorageServiceImpl implements StorageService {
 	@Autowired
 	public StorageServiceImpl(StorageProperties properties) {
 		this.rootLocation = Paths.get(properties.getLocation());
-	}
-
+	} 
+ 
 	@Override
 	public void store(MultipartFile file) {
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -59,6 +60,7 @@ public class StorageServiceImpl implements StorageService {
 		try {
 			return Files.walk(this.rootLocation, 1)
 				.filter(path -> !path.equals(this.rootLocation))
+				.filter(f -> f.getFileName().toString().endsWith(".zip"))
 				.map(this.rootLocation::relativize);
 		}
 		catch (IOException e) {

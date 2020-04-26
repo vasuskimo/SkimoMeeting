@@ -1,26 +1,205 @@
+<!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Generate Skimo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="img/favicon.ico" />
+	<link rel="stylesheet" href="css/main.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.columns {
+  float: left;
+  width: 33.3%;
+  padding: 8px;
+}
+
+.price {
+  list-style-type: none;
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.price:hover {
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+}
+
+.price .header {
+  background-color: #111;
+  color: white;
+  font-size: 25px;
+}
+
+.price li {
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+  text-align: center;
+}
+
+.price .grey {
+  background-color: #eee;
+  font-size: 20px;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 600px) {
+  .columns {
+    width: 100%;
+  }
+}
+.centr {
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+}
+</style>
+<style>
+html,body {
+  font-family: 'Raleway', sans-serif;
+  padding: 1em 2em;
+  font-size: 18px;
+  color: #ff0000;
+}
+
+h1,h2,h3 {
+  font-weight: 200;
+  margin: 0.4em 0;
+}
+h1 { font-size: 3.5em; }
+p {color: #888; font-size: 1.3em;}
+h2 {
+  color: #888;
+  font-size: 2em;
+}
+h3 {
+  color: #888;
+  font-size: 2.0em;
+}
+</style>
+
+</head>
+
+<body class="home page page-template page-template-template-notitle-php">
+
+  <!--[if lt IE 8]>
+    <div class="alert alert-warning">
+      You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.    </div>
+  <![endif]-->
+
+  <header class="banner navbar navbar-default navbar-fixed-top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://skimo.tv"><img src="img/logo.png" alt="Skimo"></a>
+      </div>
+
+    </div>
+  </header>
+
+     <div class="wrap" role="document">
+      <div class="band band-default">
+        <div class="container">
+		<br/>
+		<br/>
+    <h3 style="color:red">Generate Skimo</h3>
+
+
+<form class="md-form" method="POST" enctype="multipart/form-data" action="/">
+  <div class="file-field">
+    <div class="btn btn-primary btn-sm float-left">
+      <span>Choose file</span>
+      <input type="file" name="file">
+    </div>
+    <div class="file-path-wrapper">
+     <br/>
+      <input class="file-path validate" type="submit" placeholder="Upload video" onchange="uploadFile()">
+        <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+  <h3 id="status"></h3>
+  <p id="loaded_n_total"></p>
+    </div>
+  </div>
+</form>
+
+
 
 	<div th:if="${message}">
-		<h2 th:text="${message}"/>
+		<h3 th:text="${message}"/>
 	</div>
-
-	<div>
-		<form method="POST" enctype="multipart/form-data" action="/">
-			<table>
-				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-			</table>
-		</form>
-	</div>
-
-	<div>
+<br/>
+<br/>
+	
+	<div class = "center">
+	    <h3 style="color:red"> Download your Skimos</h3>
 		<ul>
 			<li th:each="file : ${files}">
 				<a th:href="${file}" th:text="${file}" />
 			</li>
 		</ul>
 	</div>
+	</div>
+	</div>
+	</div>
 
+<footer class="content-info" role="contentinfo">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8">
+        <ul id="menu-footer" class="footer-nav"><li class="active menu-home"><a href="/">Home</a></li>
+          <li class="menu-about-skimo"><a href="about.html">About Skimo</a></li>
+          <li class="menu-about-skimo"><a href="copyright.html">Copyright</a></li>
+          <li class="menu-about-skimo"><a href="privacy.html">Privacy Policy</a></li>
+          <li class="menu-about-skimo"><a href="terms.html">Terms of use</a></li>
+          <li class="menu-the-science"><a href="plans.html">Plans</a></li>
+          <li class="menu-terms-of-use"><a href="mailto:support@skimo.tv">support@skimo.tv</a></li>
+        </ul>
+        <br>
+        
+        <a href="https://www.facebook.com/skimotv" title="Visit our page"><img src="img/facebook.png" alt="Like us on Facebook"></a>
+        <a href="https://www.twitter.com/skimotv" title="Follow us on Twitter"><img src="img/twitter.png" alt="Twitter"></a>
+      </div>
+      
+      <div class="col-sm-4 text-right">
+        <p style="color:white;font-size: smaller;"><small>&copy; 2020 Skimo TV, Inc, Sunnyvale, California, USA.  All rights reserved.</small></p>
+      </div>
+
+    </div>
+  </div>
+</footer>
+  
+
+  <script type='text/javascript' src="../js/jquery.js"></script>
+  <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../js/upload.js"></script>
+  <script type="text/javascript" src="../js/index.js"></script>
+  
 </body>
 </html>

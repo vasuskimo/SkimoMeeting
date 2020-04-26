@@ -36,13 +36,33 @@ public class AssetInformation
 	    file = new File("public/" + assetId+"/img");
 	    result = file.mkdir();
 	    
+	    file = new File("public/" + assetId+"/js");
+	    result = file.mkdir();
+	    
+	    file = new File("public/" + assetId+"/css");
+	    result = file.mkdir();
+	    
         File source = new File(dir + assetName);
         File dest = new File("public/" + assetId + "/source.mp4");
+        
+        File sourceSlideJS = new File("public/js/glide.js");
+        File destSlideJS = new File("public/" + assetId + "/js");
+        
+        File sourceCSS = new File("public/css/style.css");
+        File destCSS = new File("public/" + assetId + "/css");
+
+        File sourceIndexJS = new File("public/index.js");
+        File destIndexJS = new File("public/" + assetId + "/js");
+        
+   
 
         try 
         {
 			Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
-		} 
+			Files.copy(sourceSlideJS.toPath(), destSlideJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceCSS.toPath(), destCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+        } 
         catch (IOException e) 
         {
 			e.printStackTrace();
