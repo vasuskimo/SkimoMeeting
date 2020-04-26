@@ -97,7 +97,7 @@ h2 {
 }
 h3 {
   color: #888;
-  font-size: 2.0em;
+  font-size: 1.5em;
 }
 </style>
 
@@ -130,13 +130,12 @@ h3 {
         <div class="container">
 		<br/>
 		<br/>
-    <h3 style="color:red">Generate Skimo</h3>
-
+    <h3>Generate Skimo</h3>
+<br/>
 
 <form class="md-form" method="POST" enctype="multipart/form-data" action="/">
   <div class="file-field">
-    <div class="btn btn-primary btn-sm float-left">
-      <span>Choose file</span>
+    <div class="btn btn-outline-secondary btn-lg">
       <input type="file" name="file">
     </div>
     <div class="file-path-wrapper">
@@ -158,7 +157,7 @@ h3 {
 <br/>
 	
 	<div class = "center">
-	    <h3 style="color:red"> Download your Skimos</h3>
+	    <h3> Download your Skimos</h3>
 		<ul>
 			<li th:each="file : ${files}">
 				<a th:href="${file}" th:text="${file}" />
