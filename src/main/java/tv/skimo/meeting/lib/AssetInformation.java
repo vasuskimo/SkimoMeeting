@@ -33,13 +33,13 @@ public class AssetInformation
 	    boolean result = file.mkdir(); 
 	    if(!result)
 	    	return false;
-	    file = new File("public/" + assetId+"/img");
+	    file = new File("public/" + assetId+"/img/");
 	    result = file.mkdir();
 	    
-	    file = new File("public/" + assetId+"/js");
+	    file = new File("public/" + assetId+"/js/");
 	    result = file.mkdir();
 	    
-	    file = new File("public/" + assetId+"/css");
+	    file = new File("public/" + assetId+"/css/");
 	    result = file.mkdir();
 	    
         File source = new File(dir + assetName);

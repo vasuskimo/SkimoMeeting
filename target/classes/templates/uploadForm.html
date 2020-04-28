@@ -136,7 +136,7 @@ h3 {
 <form class="md-form" method="POST" enctype="multipart/form-data" action="/">
   <div class="file-field">
     <div class="btn btn-outline-secondary btn-lg">
-      <input type="file" name="file">
+      <input type="file" name="file" accept=".mp4">
     </div>
     <div class="file-path-wrapper">
      <br/>
@@ -155,12 +155,21 @@ h3 {
 	</div>
 <br/>
 <br/>
-	
+
 	<div class = "center">
 	    <h3> Download your Skimos</h3>
 		<ul>
 			<li th:each="file : ${files}">
 				<a th:href="${file}" th:text="${file}" />
+			</li>
+		</ul>
+	</div>
+	
+	<div class = "center">
+	    <h3> View your Skimos</h3>
+		<ul>
+			<li th:each="url : ${urls}">
+				<a th:href="${url}" th:text="${url}" />
 			</li>
 		</ul>
 	</div>
