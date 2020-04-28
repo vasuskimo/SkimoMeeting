@@ -157,6 +157,15 @@ h3 {
 <br/>
 
 	<div class = "center">
+	    <h3> View your Skimos</h3>
+		<ul>
+			<li th:each="url : ${urls}">
+				<a th:href="${url}" th:text="${url}" />
+			</li>
+		</ul>
+	</div>
+	
+	<div class = "center">
 	    <h3> Download your Skimos</h3>
 		<ul>
 			<li th:each="file : ${files}">
@@ -165,14 +174,7 @@ h3 {
 		</ul>
 	</div>
 	
-	<div class = "center">
-	    <h3> View your Skimos</h3>
-		<ul>
-			<li th:each="url : ${urls}">
-				<a th:href="${url}" th:text="${url}" />
-			</li>
-		</ul>
-	</div>
+
 	</div>
 	</div>
 	</div>
