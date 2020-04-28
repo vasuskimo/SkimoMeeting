@@ -5,8 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -61,10 +63,22 @@ public class SkimoMeetingController {
 	@GetMapping("/")
 	public String listUploadedFiles(Model model) throws IOException 
 	{
-		model.addAttribute("files", storageService.loadAll().map(
+		List<String> filesList =  storageService.loadAll().map(
 				path -> MvcUriComponentsBuilder.fromMethodName(SkimoMeetingController.class,
 						"serveFile", path.getFileName().toString()).build().toUri().toString())
-				.collect(Collectors.toList()));
+				.collect(Collectors.toList());
+
+		
+	    ArrayList<String> urlList = new ArrayList<String>();
+		for (int i = 0; i < filesList.size(); i++)
+		{
+			String st = filesList.get(i).replace(".zip", "");
+			String st2 = st.replace("files", "skimo");
+			urlList.add(st2);
+		}
+		model.addAttribute("files",filesList);
+		model.addAttribute("urls",urlList);
+		System.out.println("blah" + urlList.toString());
 		return "uploadForm";
 	}
 
