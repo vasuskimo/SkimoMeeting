@@ -78,7 +78,6 @@ public class SkimoMeetingController {
 		}
 		model.addAttribute("files",filesList);
 		model.addAttribute("urls",urlList);
-		System.out.println("blah" + urlList.toString());
 		return "uploadForm";
 	}
 
