@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import tv.skimo.meeting.lib.AssetInformation;
 import tv.skimo.meeting.lib.EngineStatus;
 import tv.skimo.meeting.lib.FileSorter;
-import tv.skimo.meeting.lib.SceneDetector;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.lib.ThymeLeafConfig;
 import tv.skimo.meeting.lib.Zipper;
@@ -107,14 +106,12 @@ public class SkimoMeetingController {
 				storageService.store(file);
 				assetId = AssetInformation.createHash("./upload-dir/" , file.getOriginalFilename());
 
-				if(AssetInformation.createDirs("./upload-dir/", assetId, file.getOriginalFilename()))
+				if(AssetInformation.createAssetDir("./upload-dir/", assetId, file.getOriginalFilename()))
 				{
-					SceneDetector.generateFirst(file.getOriginalFilename(), assetId);
-					SceneDetector.generateThumbnail(file.getOriginalFilename(), assetId);
-					SceneDetector.generateSkimo(file.getOriginalFilename(), assetId);
 				    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
 					String retVal = "redirect:/" + "skimo/" + assetId;
-					return retVal;				}
+					return retVal;				
+				}
 				else
 					redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
 			}
@@ -142,15 +139,19 @@ public class SkimoMeetingController {
 		String videoResource = dir  + "/source.mp4";
 		String imgResource = dir + "/img";
 		
-		try {
-				if(EngineStatus.isRunningSkimo(assetId))
-					return "busy.html";
-		} catch (IOException e1) {
+		try 
+		{
+			if(EngineStatus.isRunningSkimo(assetId))
+				return "busy.html";
+		} 
+		catch (IOException e1) 
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		if(dir.exists())
+		File imgDirect = new File("public/" + assetId + "/img");
+		if(imgDirect.exists())
 		{
 			List<String> timeCodeList;
 			try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
@@ -237,7 +238,13 @@ public class SkimoMeetingController {
 	        }
 			return "index";
 		}
-		return "404";
+		else
+		{
+			if(dir.exists())
+				return "busy.html";
+			else
+				return "404";
+		}
 	}
 
 }
