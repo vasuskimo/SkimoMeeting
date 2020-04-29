@@ -67,7 +67,6 @@ public class SkimoMeetingController {
 						"serveFile", path.getFileName().toString()).build().toUri().toString())
 				.collect(Collectors.toList());
 
-		
 	    ArrayList<String> urlList = new ArrayList<String>();
 		for (int i = 0; i < filesList.size(); i++)
 		{
@@ -75,8 +74,20 @@ public class SkimoMeetingController {
 			String st2 = st.replace("files", "skimo");
 			urlList.add(st2);
 		}
-		model.addAttribute("files",filesList);
-		model.addAttribute("urls",urlList);
+		if(urlList.size() ==0)
+		{
+			filesList = new ArrayList<String>();
+			urlList = new ArrayList<String>();
+			filesList.add("No entries");
+			urlList.add("no entries");
+			model.addAttribute("files",filesList);
+			model.addAttribute("urls",urlList);
+		}
+		else
+		{
+			model.addAttribute("files",filesList);
+			model.addAttribute("urls",urlList);
+		}
 		return "uploadForm";
 	}
 
@@ -94,33 +105,18 @@ public class SkimoMeetingController {
 			RedirectAttributes redirectAttributes) 
 	{	
 		String assetId = null;
-		try 
-		{
-			if(EngineStatus.isBusy())
-			{
-				redirectAttributes.addFlashAttribute("message", "Skimo Engine is busy. Please try again");
-				return "redirect:/";
-			}
-			else
-			{
-				storageService.store(file);
-				assetId = AssetInformation.createHash("./upload-dir/" , file.getOriginalFilename());
+		storageService.store(file);
+		assetId = AssetInformation.createHash("./upload-dir/" , file.getOriginalFilename());
 
-				if(AssetInformation.createAssetDir("./upload-dir/", assetId, file.getOriginalFilename()))
-				{
-				    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
-					String retVal = "redirect:/" + "skimo/" + assetId;
-					return retVal;				
-				}
-				else
-					redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
-			}
-		} 
-		catch (IOException e) 
+		if(AssetInformation.createAssetDir("./upload-dir/", assetId, file.getOriginalFilename()))
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
+			String retVal = "redirect:/" + "skimo/" + assetId;
+			return retVal;				
 		}
+		else
+			redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
+
 		String retVal = "redirect:/" + "skimo/" + assetId;
 		return retVal;
 	}
