@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import tv.skimo.meeting.lib.StorageProperties;
 import tv.skimo.meeting.services.StorageService;
 
 @SpringBootApplication
+@EnableScheduling
 @ComponentScan({"tv.skimo.meeting"})
 @EnableConfigurationProperties(StorageProperties.class)
 public class SkimoMeetingApplication {
