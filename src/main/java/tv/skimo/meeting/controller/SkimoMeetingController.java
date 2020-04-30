@@ -33,14 +33,17 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.skimo.meeting.lib.AssetInformation;
-import tv.skimo.meeting.lib.EngineStatus;
+
 import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.lib.ThymeLeafConfig;
-import tv.skimo.meeting.lib.Zipper;
 import tv.skimo.meeting.model.Skimo;
 import tv.skimo.meeting.services.StorageService;
+import tv.skimo.meeting.utils.AssetUtil;
+import tv.skimo.meeting.utils.Constants;
+import tv.skimo.meeting.utils.EngineStatus;
+import tv.skimo.meeting.utils.SceneDetector;
+import tv.skimo.meeting.utils.Zipper;
 
 @Controller
 public class SkimoMeetingController {
@@ -79,7 +82,7 @@ public class SkimoMeetingController {
 			filesList = new ArrayList<String>();
 			urlList = new ArrayList<String>();
 			filesList.add("No entries");
-			urlList.add("no entries");
+			urlList.add("No entries");
 			model.addAttribute("files",filesList);
 			model.addAttribute("urls",urlList);
 		}
@@ -106,10 +109,28 @@ public class SkimoMeetingController {
 	{	
 		String assetId = null;
 		storageService.store(file);
-		assetId = AssetInformation.createHash("./upload-dir/" , file.getOriginalFilename());
+		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR , file.getOriginalFilename());
 
-		if(AssetInformation.createAssetDir("./upload-dir/", assetId, file.getOriginalFilename()))
+		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR, assetId, file.getOriginalFilename()))
 		{
+			try 
+			{
+				if(EngineStatus.isBusy())
+				{
+					logger.info("Engine is busy");
+				}
+				else
+				{
+					SceneDetector.generateFirst(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+					SceneDetector.generateThumbnail(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+					SceneDetector.generateSkimo(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+				}
+			} 
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
 			String retVal = "redirect:/" + "skimo/" + assetId;
 			return retVal;				
@@ -130,9 +151,9 @@ public class SkimoMeetingController {
 	@GetMapping("/skimo/{assetId}")
 	public String viewMedia( Model model,@PathVariable(name="assetId") String assetId )
 	{
-		File dir = new File("public/" + assetId);
+		File dir = new File(Constants.PUBLIC + assetId);
 		String timeCodeResource = dir + "/timecodes.txt";
-		String videoResource = dir  + "/source.mp4";
+		String videoResource = dir  + Constants.ASSET_NAME;
 		String imgResource = dir + "/img";
 		
 		try 
@@ -146,7 +167,7 @@ public class SkimoMeetingController {
 			e1.printStackTrace();
 		}
 		
-		File imgDirect = new File("public/" + assetId + "/img");
+		File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
 		if(imgDirect.exists())
 		{
 			List<String> timeCodeList;
@@ -177,7 +198,7 @@ public class SkimoMeetingController {
 					i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
 				}
 			}
-		    File imgDir = new File("public/" + assetId +"/img");
+		    File imgDir = new File(Constants.PUBLIC + assetId +"/img");
 			List<String> imgList = FileSorter.sort(imgDir);
 			
 			File videoFile = new File(videoResource);
@@ -212,15 +233,15 @@ public class SkimoMeetingController {
 		    context.setVariable("mediaList", skimoList);
 
 	        Writer writer = null;
-	        File indexFile = new File("public/" + assetId + "/index.html");
+	        File indexFile = new File(Constants.PUBLIC + assetId + "/index.html");
 	        if(!indexFile.exists())
 	        {
-	            String[] skimoFiles = {"public/" + assetId};
+	            String[] skimoFiles = {Constants.PUBLIC + assetId};
 	            String zipFile = "upload-dir/" + assetId + ".zip";
 	            Zipper zipUtil = new Zipper();
 	        	try 
 	        	{
-	        		writer = new FileWriter("public/" + assetId + "/index.html");
+	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/index.html");
 	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("index.html", context));
 	        		writer.close();
 	                zipUtil.zip(skimoFiles, zipFile);
