@@ -3,3 +3,4 @@ upload-dir/
 .DS_Store
 scripts/
 *.class
+target/
