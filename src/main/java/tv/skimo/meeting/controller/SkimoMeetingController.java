@@ -210,11 +210,18 @@ public class SkimoMeetingController {
 			List<String> updatedTimeCodeList =new ArrayList<>(1000);
 			List<String> updatedImgList = new ArrayList<>(1000);
 
-			for(int  i=0; i < updatedList.size();  i++)
+			try
 			{
-				int ix = updatedList.get(i);
-				updatedTimeCodeList.add(timeCodeList.get(ix).toString());
-				updatedImgList.add(finalImgList.get(ix).toString());
+				for(int  i=0; i < updatedList.size();  i++)
+				{
+					int ix = updatedList.get(i);
+					updatedTimeCodeList.add(timeCodeList.get(ix).toString());
+					updatedImgList.add(finalImgList.get(ix).toString());
+				}
+			}
+			catch(Exception e)
+			{
+				return "404";
 			}
 			
 			IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
