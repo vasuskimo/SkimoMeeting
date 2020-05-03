@@ -2,6 +2,8 @@ package tv.skimo.meeting.background;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,10 +15,11 @@ import tv.skimo.meeting.utils.EngineStatus;
 import tv.skimo.meeting.utils.SceneDetector;
 
 @Component
-public class Scheduler {
-
+public class Scheduler 
+{
 	private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
 
+	
 	@Scheduled(fixedDelay = Constants.SKIMO_JOB_FREQUENCY_IN_SECONDS)
 	public void executeSkimoJobs() 
 	{
@@ -24,7 +27,7 @@ public class Scheduler {
 		{
 			if(EngineStatus.isBusy())
 			{
-				log.info("Engine is busy");
+				log.info("Background task: engine is busy");
 			}
 			else
 			{
@@ -44,7 +47,7 @@ public class Scheduler {
 						assetDirs = new File(Constants.PUBLIC + dirs[i].getName()).listFiles(File::isDirectory);
 						if(assetDirs.length < 1)
 						{
-							log.info("Kicking off Skimo for " + assetId);
+							log.info("Background task: kicking off Skimo for " + assetId);
 							AssetUtil.provisionAsset(assetId, Constants.PUBLIC + assetId + Constants.ASSET_NAME);
 							SceneDetector.generateFirst(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SceneDetector.generateThumbnail(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
@@ -60,6 +63,56 @@ public class Scheduler {
 			e.printStackTrace();
 		}
 	}
+	
+	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
+	public void cleanupUploadDirectory() 
+	{
+		File[] files = new File(Constants.UPLOAD_DIR).listFiles();
+		
+        for (File f:files)
+        {
+        	long diff = new Date().getTime() - f.lastModified();
+
+        	if (diff > Constants.DAILY * 24 * 60 * 60 * 1000)
+        	{
+        		f.delete();
+        		log.info("Background cleanup task cleaned up " + f.getName());
+        	}
+        }
+	}
+
+	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
+	public void cleanupAssetDirectories() 
+	{
+		File[] files = new File(Constants.PUBLIC).listFiles(File::isDirectory);
+		
+		log.info("Background cleanup task kicked off");
+		
+        for (File f:files)
+        {
+        	// delete all older directories than 7 days other than css,img,js 
+        	
+			if((!f.getName().equals("js")) && (!f.getName().equals("css")) && 
+					(!f.getName().equals("img"))) 
+			{
+	        	log.info("Background cleanup task trying to cleanup" + f.getName());
+				long diff = new Date().getTime() - f.lastModified();
+
+	        	if (diff > Constants.WEEKLY * 24 * 60 * 60 * 1000)
+	        	{
+	        		for (File f2 : f.listFiles()) 
+	        		{
+	        			for (File f3 : f2.listFiles()) 
+	        				f3.delete();
+	        			f2.delete();
+	        		}
+	        		f.delete();
+	        		log.info("Background cleanup task cleaned up " + f.getName());
+	        	}
+			}
+        }
+	}
+	
 	public static void main(String args[])
 	{
 		Scheduler s = new Scheduler();
