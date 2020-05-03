@@ -69,6 +69,8 @@ public class Scheduler
 	{
 		File[] files = new File(Constants.UPLOAD_DIR).listFiles();
 		
+		log.info("Background cleanup upload directory task kicked off");
+
         for (File f:files)
         {
         	long diff = new Date().getTime() - f.lastModified();
@@ -86,7 +88,7 @@ public class Scheduler
 	{
 		File[] files = new File(Constants.PUBLIC).listFiles(File::isDirectory);
 		
-		log.info("Background cleanup task kicked off");
+		log.info("Background cleanup asset task kicked off");
 		
         for (File f:files)
         {
@@ -95,11 +97,11 @@ public class Scheduler
 			if((!f.getName().equals("js")) && (!f.getName().equals("css")) && 
 					(!f.getName().equals("img"))) 
 			{
-	        	log.info("Background cleanup task trying to cleanup" + f.getName());
 				long diff = new Date().getTime() - f.lastModified();
 
 	        	if (diff > Constants.WEEKLY * 24 * 60 * 60 * 1000)
 	        	{
+		        	log.info("Background cleanup task trying to cleanup " + f.getName());
 	        		for (File f2 : f.listFiles()) 
 	        		{
 	        			for (File f3 : f2.listFiles()) 
