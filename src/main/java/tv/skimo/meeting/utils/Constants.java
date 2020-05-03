@@ -3,6 +3,9 @@ package tv.skimo.meeting.utils;
 public class Constants 
 {
 	public static final int SKIMO_JOB_FREQUENCY_IN_SECONDS = 300000;
+	public static final int CLEANUP_TASK_FREQUENCY_IN_SECONDS = 43200;
+	public static final int DAILY = 1;
+	public static final int WEEKLY = 7;
 	public static final String PUBLIC = "public/";
 	public static final String ASSET_NAME = "/source.mp4";
 	public static final String ROOT = "/";
