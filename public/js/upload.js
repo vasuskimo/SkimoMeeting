@@ -8,11 +8,11 @@ function uploadFile() {
   var formdata = new FormData();
   formdata.append("file1", file);
   var ajax = new XMLHttpRequest();
-  ajax.upload.addEventListener("progress", progressHandler, false);
+  ajax.upload.addEventListener("progress", progressHandler, true);
   ajax.addEventListener("load", completeHandler, false);
   ajax.addEventListener("error", errorHandler, false);
   ajax.addEventListener("abort", abortHandler, false);
-  ajax.open("POST", "/"); // http://www.developphp.com/video/JavaScript/File-Upload-Progress-Bar-Meter-Tutorial-Ajax-PHP
+  ajax.open("POST", "/videos/upload"); // http://www.developphp.com/video/JavaScript/File-Upload-Progress-Bar-Meter-Tutorial-Ajax-PHP
   //use file_upload_parser.php from above url
   ajax.send(formdata);
 }

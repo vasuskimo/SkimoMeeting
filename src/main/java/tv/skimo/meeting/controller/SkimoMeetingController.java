@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ public class SkimoMeetingController {
 		this.storageService = storageService;
 	}
 
-	@GetMapping("/")
+	@GetMapping("/videos/upload")
 	public String listUploadedFiles(Model model) throws IOException 
 	{
 		List<String> filesList =  storageService.loadAll().map(
@@ -103,7 +104,7 @@ public class SkimoMeetingController {
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	}
 
-	@PostMapping("/")
+	@PostMapping("/videos/upload")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) 
 	{	
@@ -240,7 +241,7 @@ public class SkimoMeetingController {
 		    context.setVariable("mediaList", skimoList);
 
 	        Writer writer = null;
-	        File indexFile = new File(Constants.PUBLIC + assetId + "/index.html");
+	        File indexFile = new File(Constants.PUBLIC + assetId + "/upload.html");
 	        if(!indexFile.exists())
 	        {
 	            String[] skimoFiles = {Constants.PUBLIC + assetId};
@@ -248,8 +249,8 @@ public class SkimoMeetingController {
 	            Zipper zipUtil = new Zipper();
 	        	try 
 	        	{
-	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/index.html");
-	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("index.html", context));
+	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/upload.html");
+	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("upload.html", context));
 	        		writer.close();
 	                zipUtil.zip(skimoFiles, zipFile);
 	        	} 
@@ -260,7 +261,7 @@ public class SkimoMeetingController {
 	        	}
 	        	
 	        }
-			return "index";
+			return "upload";
 		}
 		else
 		{

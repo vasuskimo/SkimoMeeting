@@ -64,7 +64,7 @@ public class AssetUtil
         File sourceCSS = new File("public/css/style.css");
         File destCSS = new File(Constants.PUBLIC + assetId + "/css/style.css");
 
-        File sourceIndexJS = new File("public/index.js");
+        File sourceIndexJS = new File("public/js/index.js");
         File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/index.js");
         
 
