@@ -1,7 +1,7 @@
 asset="$1"
 assetid="$2"
 cwd="$3"
-if [[ $(uname -s) == Linux ]]
+if [[ $(uname -s) == "Linux" ]]
 then
     script="/usr/bin/ffprobe"
 else
