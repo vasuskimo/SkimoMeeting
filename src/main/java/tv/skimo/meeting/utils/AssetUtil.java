@@ -67,12 +67,25 @@ public class AssetUtil
         File sourceIndexJS = new File("public/js/index.js");
         File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/index.js");
         
+        File sourceLogo = new File("public/img/skimologo.png");
+        File destLogo = new File(Constants.PUBLIC + assetId + "/skimologo.png");
+       
+        File sourceLeftImg = new File("public/img/line-angle-left.png");
+        File destLeftImg = new File(Constants.PUBLIC + assetId + "/line-angle-left.png");
+        
+        File sourceRightImg = new File("public/img/line-angle-right.png");
+        File destRightImg = new File(Constants.PUBLIC + assetId + "/line-angle-right.png");
+        
 
         try 
         {
 			Files.copy(sourceSlideJS.toPath(), destSlideJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceCSS.toPath(), destCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceLeftImg.toPath(), destLeftImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceRightImg.toPath(), destRightImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
+
         } 
         catch (IOException e) 
         {
