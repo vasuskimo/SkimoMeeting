@@ -241,7 +241,7 @@ public class SkimoMeetingController {
 		    context.setVariable("mediaList", skimoList);
 
 	        Writer writer = null;
-	        File indexFile = new File(Constants.PUBLIC + assetId + "/upload.html");
+	        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
 	        if(!indexFile.exists())
 	        {
 	            String[] skimoFiles = {Constants.PUBLIC + assetId};
@@ -249,8 +249,8 @@ public class SkimoMeetingController {
 	            Zipper zipUtil = new Zipper();
 	        	try 
 	        	{
-	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/upload.html");
-	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("upload.html", context));
+	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/skimo.html");
+	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("skimo.html", context));
 	        		writer.close();
 	                zipUtil.zip(skimoFiles, zipFile);
 	        	} 
