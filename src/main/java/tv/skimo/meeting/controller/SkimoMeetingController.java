@@ -43,6 +43,7 @@ import tv.skimo.meeting.services.StorageService;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
+import tv.skimo.meeting.utils.LineCounter;
 import tv.skimo.meeting.utils.SceneDetector;
 import tv.skimo.meeting.utils.Zipper;
 
@@ -155,121 +156,128 @@ public class SkimoMeetingController {
 		File dir = new File(Constants.PUBLIC + assetId);
 		String timeCodeResource = dir + "/timecodes.txt";
 		String videoResource = dir  + Constants.ASSET_NAME;
-		String imgResource = dir + "/img";
+        Writer writer = null;
+        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
+        String imgResource = dir + "/img";
+        File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
+		int noOfLines = 0;
 		
+        if(indexFile.exists())
+        {
+    		return("redirect:/" + assetId + "/skimo.html");
+        }
+        File f = new File(timeCodeResource); 
+		
+		if(f.exists())
+		{
+			noOfLines = LineCounter.count(timeCodeResource);
+		}
 		try 
 		{
-			if(EngineStatus.isRunningSkimo(assetId))
-				return "busy.html";
-		} 
-		catch (IOException e1) 
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
-		if(imgDirect.exists())
-		{
-			List<String> timeCodeList;
-			try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
+			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 8))
 			{
-				timeCodeList = lines.collect( Collectors.toList() );
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
-				return "error.html";
-			}
-			timeCodeList.add(0,"0.0");
-
-			List<Integer> updatedList = new ArrayList<>();
-			String initVal = timeCodeList.get( 0 );
-			if ( initVal == null )
-			{
-				return "error.html";
-			}
-			updatedList.add(0);
-			for ( int i = 0; i < timeCodeList.size(); i++ )
-			{ 
-				if ( ( Double.parseDouble( timeCodeList.get( i ) ) - Double.parseDouble( initVal ) ) > 30 )
+				List<String> timeCodeList;
+				try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
 				{
-					updatedList.add(i );
-					initVal = timeCodeList.get( i );
-					i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
+					timeCodeList = lines.collect( Collectors.toList() );
 				}
-			}
-		    File imgDir = new File(Constants.PUBLIC + assetId +"/img");
-			List<String> imgList = FileSorter.sort(imgDir);
-			
-			File videoFile = new File(videoResource);
-			String videoFileName = videoFile.getName();
-			baseUrl = "../" +assetId  + "/";
-			ArrayList<Skimo> skimoList = new ArrayList<>();
-			List<String> finalImgList = imgList;
-			
-			List<String> updatedTimeCodeList =new ArrayList<>(1000);
-			List<String> updatedImgList = new ArrayList<>(1000);
-
-			try
-			{
-				for(int  i=0; i < updatedList.size();  i++)
+				catch ( IOException e )
 				{
-					int ix = updatedList.get(i);
-					updatedTimeCodeList.add(timeCodeList.get(ix).toString());
-					updatedImgList.add(finalImgList.get(ix).toString());
+					e.printStackTrace();
+					return "error.html";
 				}
-			}
-			catch(Exception e)
-			{
-				return "404";
-			}
-			
-			IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
-				double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
-				int videoTime = ( int ) v;
-				skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ) ) );
-			} );
+				timeCodeList.add(0,"0.0");
 
-			Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) );
-			model.addAttribute("first_item",  first_item );			
-			model.addAttribute( "mediaList", skimoList );
-			
-			
-		    Context context = new Context();
-		    context.setVariable("first_item", first_item);
-		    context.setVariable("mediaList", skimoList);
+				List<Integer> updatedList = new ArrayList<>();
+				String initVal = timeCodeList.get( 0 );
+				if ( initVal == null )
+				{
+					return "error.html";
+				}
+				updatedList.add(0);
+				for ( int i = 0; i < timeCodeList.size(); i++ )
+				{ 
+					if ( ( Double.parseDouble( timeCodeList.get( i ) ) - Double.parseDouble( initVal ) ) > 30 )
+					{
+						updatedList.add(i );
+						initVal = timeCodeList.get( i );
+						i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
+					}
+				}
+			    File imgDir = new File(Constants.PUBLIC + assetId +"/img");
+				List<String> imgList = FileSorter.sort(imgDir);
+				
+				File videoFile = new File(videoResource);
+				String videoFileName = videoFile.getName();
+				baseUrl = "../" +assetId  + "/";
+				ArrayList<Skimo> skimoList = new ArrayList<>();
+				List<String> finalImgList = imgList;
+				
+				List<String> updatedTimeCodeList =new ArrayList<>(1000);
+				List<String> updatedImgList = new ArrayList<>(1000);
 
-	        Writer writer = null;
-	        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
-	        if(!indexFile.exists())
-	        {
-	            String[] skimoFiles = {Constants.PUBLIC + assetId};
-	            String zipFile = "upload-dir/" + assetId + ".zip";
-	            Zipper zipUtil = new Zipper();
-	        	try 
-	        	{
-	        		writer = new FileWriter(Constants.PUBLIC + assetId + "/skimo.html");
-	        		writer.write(ThymeLeafConfig.getTemplateEngine().process("skimo.html", context));
-	        		writer.close();
-	                zipUtil.zip(skimoFiles, zipFile);
-	        	} 
-	        	catch (Exception e) 
-	        	{
-	        		// TODO Auto-generated catch block
-	        		e.printStackTrace();
-	        	}
-	        	
-	        }
-			return "upload";
-		}
-		else
-		{
-			if(dir.exists())
-				return "busy.html";
+				try
+				{
+					for(int  i=0; i < updatedList.size();  i++)
+					{
+						int ix = updatedList.get(i);
+						updatedTimeCodeList.add(timeCodeList.get(ix).toString());
+						updatedImgList.add(finalImgList.get(ix).toString());
+					}
+				}
+				catch(Exception e)
+				{
+					return "404";
+				}
+				
+				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
+					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
+					int videoTime = ( int ) v;
+					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ) ) );
+				} );
+
+				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) );
+				model.addAttribute("first_item",  first_item );			
+				model.addAttribute( "mediaList", skimoList );
+				
+				
+			    Context context = new Context();
+			    context.setVariable("first_item", first_item);
+			    context.setVariable("mediaList", skimoList);
+
+
+			    if(!indexFile.exists())
+			    {
+			        String[] skimoFiles = {Constants.PUBLIC + assetId};
+			        String zipFile = "upload-dir/" + assetId + ".zip";
+			        Zipper zipUtil = new Zipper();
+			    	try 
+			    	{
+			    		writer = new FileWriter(Constants.PUBLIC + assetId + "/skimo.html");
+			    		writer.write(ThymeLeafConfig.getTemplateEngine().process("skimo.html", context));
+			    		writer.close();
+			            zipUtil.zip(skimoFiles, zipFile);
+			    	} 
+			    	catch (Exception e) 
+			    	{
+			    		// TODO Auto-generated catch block
+			    		e.printStackTrace();
+			    	}
+			    }
+				return "upload";
+			}
 			else
-				return "404";
+			{
+				if(dir.exists())
+					return "busy.html";
+				else
+					return "404";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return "404";
 	}
 
 }
