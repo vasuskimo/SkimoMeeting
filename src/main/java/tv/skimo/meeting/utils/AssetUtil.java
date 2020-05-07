@@ -76,6 +76,9 @@ public class AssetUtil
         File sourceRightImg = new File("public/img/line-angle-right.png");
         File destRightImg = new File(Constants.PUBLIC + assetId + "/line-angle-right.png");
         
+        File sourceFavIcon = new File("public/img/favicon.ico");
+        File destFavIcon = new File(Constants.PUBLIC + assetId + "/favicon.ico");
+        
 
         try 
         {
@@ -85,7 +88,7 @@ public class AssetUtil
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLeftImg.toPath(), destLeftImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceRightImg.toPath(), destRightImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
-
+			Files.copy(sourceFavIcon.toPath(), destFavIcon.toPath(),StandardCopyOption.REPLACE_EXISTING);
         } 
         catch (IOException e) 
         {
