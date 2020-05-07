@@ -4,8 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import tv.skimo.meeting.controller.SkimoMeetingController;
+
 public class EngineStatus 
 { 
+   private static final Logger log=LoggerFactory.getLogger(EngineStatus.class);
+   
    public static boolean isBusy() throws IOException 
    {
 		String process,s="";
@@ -19,9 +26,9 @@ public class EngineStatus
 			}
 			input.close();
 		} 
-		catch (Exception err) 
+		catch (Exception e) 
 		{
-			err.printStackTrace();
+			log.error("Threw an exception in EngineStatus::isBusy, full stack trace follows:", e);
 		}
 		int index = s.indexOf(Constants.FFPROBE); 
 		if(index != -1)
@@ -45,9 +52,9 @@ public class EngineStatus
 			}
 			input.close();
 		} 
-		catch (Exception err) 
+		catch (Exception e) 
 		{
-			err.printStackTrace();
+			log.error("Threw an exception in EngineStatus::isRunningSkimo, full stack trace follows:", e);
 		}
 		int index = s.indexOf(assetId);
 		if(index ==  -1)
