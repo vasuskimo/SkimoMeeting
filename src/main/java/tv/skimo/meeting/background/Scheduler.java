@@ -67,20 +67,11 @@ public class Scheduler
 	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
 	public void cleanupUploadDirectory() 
 	{
-		File[] files = new File(Constants.UPLOAD_DIR).listFiles();
+		File dir = new File(Constants.UPLOAD_DIR);
 		
 		log.info("Background cleanup upload directory task kicked off");
 
-        for (File f:files)
-        {
-        	long diff = new Date().getTime() - f.lastModified();
-
-        	if (diff > Constants.DAILY * 24 * 60 * 60 * 1000)
-        	{
-        		f.delete();
-        		log.info("Background cleanup task cleaned up " + f.getName());
-        	}
-        }
+		deleteFiles(dir);
 	}
 
 	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
@@ -113,6 +104,25 @@ public class Scheduler
 	        	}
 			}
         }
+	}
+	
+	public void deleteFiles(File dir) 
+	{
+	    File[] files = dir.listFiles();
+	    if(files != null) 
+	    {
+	        for (final File file : files) 
+	        {
+	           deleteFiles(file);
+	        }
+	    }
+	    long diff = new Date().getTime() - dir.lastModified();
+
+    	if (diff > Constants.DAILY * 24 * 60 * 60 * 1000)
+    	{
+    		if(!dir.isDirectory())
+    		   dir.delete();
+    	}
 	}
 	
 	public static void main(String args[])
