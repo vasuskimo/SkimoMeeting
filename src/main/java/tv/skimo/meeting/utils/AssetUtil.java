@@ -5,8 +5,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import tv.skimo.meeting.controller.SkimoMeetingController;
+
 public class AssetUtil
 { 
+    private static final Logger log=LoggerFactory.getLogger(AssetUtil.class);
+    
 	// This method computes the crc32 code of the uploaded file
     public static String createHash(String dir, String assetName)
     {
@@ -17,7 +24,7 @@ public class AssetUtil
 		} 
 		catch (IOException e) 
 		{
-			e.printStackTrace();
+			log.error("Threw an exception in AssetUtil::createHash, full stack trace follows:", e);
 		}
 	    String assetId = Long.toHexString(crc);
 	    
@@ -39,7 +46,7 @@ public class AssetUtil
 		} 
 		catch (IOException e) 
 		{
-			e.printStackTrace();
+			log.error("Threw an exception in AssetUtil::createAssetDir, full stack trace follows:", e);
 		}
 	    return(result);
     } 
@@ -92,7 +99,7 @@ public class AssetUtil
         } 
         catch (IOException e) 
         {
-			e.printStackTrace();
+			log.error("Threw an exception in AssetUtil::provisionAsset, full stack trace follows:", e);
 		}
 	      
 	    return true;  	
