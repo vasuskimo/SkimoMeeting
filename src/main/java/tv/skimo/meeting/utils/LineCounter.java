@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LineCounter 
 {
+    private static final Logger log=LoggerFactory.getLogger(LineCounter.class);
+
 	public static int count(String fileName)  
 	{
 	    FileReader fr;
@@ -25,8 +30,7 @@ public class LineCounter
 		} 
 		catch (Exception e) 
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Threw an exception in LineCounter::count, full stack trace follows:", e);
 		}
 	    return count;
 	}
