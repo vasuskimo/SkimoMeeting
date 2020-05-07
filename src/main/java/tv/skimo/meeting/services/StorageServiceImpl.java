@@ -30,7 +30,7 @@ public class StorageServiceImpl implements StorageService {
 
 	private final Path rootLocation;
 	
-    private static final Logger logger=LoggerFactory.getLogger(SkimoMeetingController.class);
+    private static final Logger log=LoggerFactory.getLogger(StorageServiceImpl.class);
 
 	@Autowired
 	public StorageServiceImpl(StorageProperties properties) {
@@ -50,15 +50,15 @@ public class StorageServiceImpl implements StorageService {
 			source = Paths.get(this.rootLocation.toString(), args[0]);
 			try {
 				if(Files.exists(source))
-					logger.info(source + " already exists ");
+					log.info(source + " already exists ");
 				else {
 					  File createDir = new File(source.toString());
 				      createDir.mkdir();	
-					  logger.info(source + " directory created");
+					  log.info(source + " directory created");
 				}
 			} 
 			catch (Exception e) {
-				e.printStackTrace();
+				log.error("Threw an exception in StorageServiceImpl::store, full stack trace follows:", e);
 			}
 		}
 		try {
@@ -66,7 +66,6 @@ public class StorageServiceImpl implements StorageService {
 				throw new StorageException("Failed to store empty file " + filename);
 			}
 			if (filename.contains("..")) {
-				// This is a security check
 				throw new StorageException(
 						"Cannot store file with relative path outside current directory "
 								+ filename);
@@ -77,6 +76,7 @@ public class StorageServiceImpl implements StorageService {
 			}
 		}
 		catch (IOException e) {
+			log.error("Threw an exception in StorageServiceImpl::store, full stack trace follows:", e);
 			throw new StorageException("Failed to store file " + filename, e);
 		}
 	}
@@ -90,6 +90,7 @@ public class StorageServiceImpl implements StorageService {
 				.map(this.rootLocation::relativize);
 		}
 		catch (IOException e) {
+			log.error("Threw an exception in StorageServiceImpl::loadAll, full stack trace follows:", e);
 			throw new StorageException("Failed to read stored files", e);
 		}
 
@@ -129,6 +130,7 @@ public class StorageServiceImpl implements StorageService {
 			Files.createDirectories(rootLocation);
 		}
 		catch (IOException e) {
+			log.error("Threw an exception in StorageServiceImpl::init, full stack trace follows:", e);
 			throw new StorageException("Could not initialize storage", e);
 		}
 	}
