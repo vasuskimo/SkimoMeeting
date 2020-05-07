@@ -61,6 +61,7 @@ public class Scheduler
 		catch (IOException e) 
 		{
 			e.printStackTrace();
+			log.error("Threw an exception in Scheduler::executeSkimoJobs, full stack trace follows:", e);
 		}
 	}
 	
