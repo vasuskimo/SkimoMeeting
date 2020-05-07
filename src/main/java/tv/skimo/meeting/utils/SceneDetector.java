@@ -33,7 +33,7 @@ public class SceneDetector
         } 
         catch (IOException e) 
         {
-            e.printStackTrace();
+			log.error("Threw an exception in SceneDetector::generateFirst, full stack trace follows:", e);
         }
 	}
 	
@@ -56,7 +56,7 @@ public class SceneDetector
         } 
         catch (IOException e) 
         {
-            e.printStackTrace();
+			log.error("Threw an exception in SceneDetector::generateThumbnail, full stack trace follows:", e);
         }
 	}
 	
@@ -82,7 +82,7 @@ public class SceneDetector
         } 
         catch (IOException e) 
         {
-            e.printStackTrace();
+			log.error("Threw an exception in SceneDetector::generateSkimo, full stack trace follows:", e);
         }
 	}
 
