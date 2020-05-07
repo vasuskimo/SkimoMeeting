@@ -110,10 +110,12 @@ public class SkimoMeetingController {
 			RedirectAttributes redirectAttributes) 
 	{	
 		String assetId = null;
-		storageService.store(file);
-		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR , file.getOriginalFilename());
+		String accName = "basic/vasusrini@gmail.com/";
+		
+		storageService.store(file,accName);
+		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR + accName , file.getOriginalFilename());
 
-		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR, assetId, file.getOriginalFilename()))
+		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename()))
 		{
 			try 
 			{
@@ -123,9 +125,9 @@ public class SkimoMeetingController {
 				}
 				else
 				{
-					SceneDetector.generateFirst(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-					SceneDetector.generateThumbnail(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-					SceneDetector.generateSkimo(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+					SceneDetector.generateFirst(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SceneDetector.generateThumbnail(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SceneDetector.generateSkimo(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 				}
 			} 
 			catch (IOException e) 
