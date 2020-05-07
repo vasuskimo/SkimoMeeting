@@ -52,7 +52,7 @@ public class SkimoMeetingController {
 
 	private final StorageService storageService;
 	
-    private static final Logger logger=LoggerFactory.getLogger(SkimoMeetingController.class);
+    private static final Logger log=LoggerFactory.getLogger(SkimoMeetingController.class);
 
 	private String baseUrl;
 	
@@ -121,7 +121,7 @@ public class SkimoMeetingController {
 			{
 				if(EngineStatus.isBusy())
 				{
-					logger.info("Engine is busy");
+					log.info("Engine is busy");
 				}
 				else
 				{
@@ -132,8 +132,7 @@ public class SkimoMeetingController {
 			} 
 			catch (IOException e) 
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Threw an exception in SkimoMeetingController::handleFileUpload, full stack trace follows:", e);
 			}
 		    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
 			String retVal = "redirect:/" + "skimo/" + assetId;
@@ -174,6 +173,7 @@ public class SkimoMeetingController {
 		{
 			noOfLines = LineCounter.count(timeCodeResource);
 		}
+		
 		try 
 		{
 			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 8))
@@ -185,7 +185,7 @@ public class SkimoMeetingController {
 				}
 				catch ( IOException e )
 				{
-					e.printStackTrace();
+					log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 					return "error.html";
 				}
 				timeCodeList.add(0,"0.0");
@@ -229,6 +229,7 @@ public class SkimoMeetingController {
 				}
 				catch(Exception e)
 				{
+					log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 					return "404";
 				}
 				
@@ -262,8 +263,7 @@ public class SkimoMeetingController {
 			    	} 
 			    	catch (Exception e) 
 			    	{
-			    		// TODO Auto-generated catch block
-			    		e.printStackTrace();
+						log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 			    	}
 			    }
 				return "upload";
@@ -275,9 +275,10 @@ public class SkimoMeetingController {
 				else
 					return "404";
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (Exception e) 
+		{
+			log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 		}
 		return "404";
 	}
