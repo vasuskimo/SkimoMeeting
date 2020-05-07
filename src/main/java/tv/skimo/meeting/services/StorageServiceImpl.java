@@ -1,5 +1,6 @@
 package tv.skimo.meeting.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -7,9 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,6 +20,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import tv.skimo.meeting.controller.SkimoMeetingController;
 import tv.skimo.meeting.lib.StorageException;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.lib.StorageProperties;
@@ -26,6 +29,8 @@ import tv.skimo.meeting.lib.StorageProperties;
 public class StorageServiceImpl implements StorageService {
 
 	private final Path rootLocation;
+	
+    private static final Logger logger=LoggerFactory.getLogger(SkimoMeetingController.class);
 
 	@Autowired
 	public StorageServiceImpl(StorageProperties properties) {
@@ -33,8 +38,29 @@ public class StorageServiceImpl implements StorageService {
 	} 
  
 	@Override
-	public void store(MultipartFile file) {
+	public void store(MultipartFile file, String ... args) {
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
+		Path source;		
+		if(args.length == 0)
+		{
+			source = Paths.get(this.rootLocation.toString());
+		}
+		else
+		{
+			source = Paths.get(this.rootLocation.toString(), args[0]);
+			try {
+				if(Files.exists(source))
+					logger.info(source + " already exists ");
+				else {
+					  File createDir = new File(source.toString());
+				      createDir.mkdir();	
+					  logger.info(source + " directory created");
+				}
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		try {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file " + filename);
@@ -46,7 +72,7 @@ public class StorageServiceImpl implements StorageService {
 								+ filename);
 			}
 			try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, this.rootLocation.resolve(filename),
+				Files.copy(inputStream, source.resolve(filename),
 					StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
@@ -85,7 +111,6 @@ public class StorageServiceImpl implements StorageService {
 			else {
 				throw new StorageFileNotFoundException(
 						"Could not read file: " + filename);
-
 			}
 		}
 		catch (MalformedURLException e) {
