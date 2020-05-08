@@ -8,12 +8,10 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tv.skimo.meeting.background.Scheduler;
  
 public class SceneDetector
 { 
-	private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
+	private static final Logger log = LoggerFactory.getLogger(SceneDetector.class);
 
 	public static void generateFirst(String asset, String assetId)
 	{

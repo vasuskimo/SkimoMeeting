@@ -5,10 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import org.slf4j.Logger;
@@ -56,7 +53,6 @@ public class SkimoMeetingController {
 
 	private String baseUrl;
 	
-    @Autowired private TemplateEngine templateEngine;
 
 	@Autowired
 	public SkimoMeetingController(StorageService storageService)
@@ -159,7 +155,6 @@ public class SkimoMeetingController {
 		String videoResource = dir  + Constants.ASSET_NAME;
         Writer writer = null;
         File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
-        String imgResource = dir + "/img";
         File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
 		int noOfLines = 0;
 		

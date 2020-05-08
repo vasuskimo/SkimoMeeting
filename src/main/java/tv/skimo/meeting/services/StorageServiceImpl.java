@@ -20,7 +20,6 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import tv.skimo.meeting.controller.SkimoMeetingController;
 import tv.skimo.meeting.lib.StorageException;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.lib.StorageProperties;

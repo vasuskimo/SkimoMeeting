@@ -3,6 +3,7 @@ import java.io.Serializable;
 
 public class Skimo implements Serializable
 {
+	private static final long serialVersionUID = -375414813253543648L;
 	private String imageUrl;
 	private String videoUrl;
  

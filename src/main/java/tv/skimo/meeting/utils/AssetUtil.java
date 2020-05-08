@@ -8,7 +8,6 @@ import java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tv.skimo.meeting.controller.SkimoMeetingController;
 
 public class AssetUtil
 { 

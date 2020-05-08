@@ -1,7 +1,6 @@
 package tv.skimo.meeting.lib;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,7 +9,7 @@ import java.util.List;
 public class FileSorter 
 {
  
-	public static List sort(File  dir)
+	public static List<String> sort(File  dir)
 	{
 		List<String> list = new ArrayList<>();
 		File[] files = dir.listFiles();
@@ -20,7 +19,6 @@ public class FileSorter
 			return new Date(f1.lastModified()).compareTo(new Date(f2.lastModified()));
 		});
 
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		for (File file : files) 
 		{
