@@ -162,6 +162,10 @@ public class SkimoMeetingController {
         {
     		return("redirect:/" + assetId + "/skimo.html");
         }
+        else
+        {
+        	log.info("skimo.html file does not exist for " + assetId);
+        }
         File f = new File(timeCodeResource); 
 		
 		if(f.exists())
@@ -189,6 +193,7 @@ public class SkimoMeetingController {
 				String initVal = timeCodeList.get( 0 );
 				if ( initVal == null )
 				{
+					log.warn("initVal is null for assetId " + assetId);
 					return "error.html";
 				}
 				updatedList.add(0);
