@@ -102,10 +102,11 @@ public class SkimoMeetingController {
 	}
 
 	@PostMapping("/videos/upload")
+	@ResponseBody
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) 
 	{	
-		String assetId = null;
+		String assetId = "";
 		String accName = "basic/vasusrini@gmail.com/";
 		
 		storageService.store(file,accName);
@@ -130,14 +131,10 @@ public class SkimoMeetingController {
 			{
 				log.error("Threw an exception in SkimoMeetingController::handleFileUpload, full stack trace follows:", e);
 			}
-		    redirectAttributes.addFlashAttribute("message", "Skimo is being generated for " + file.getOriginalFilename());
-			String retVal = "redirect:/" + "skimo/" + assetId;
+			String retVal = "skimo/" + assetId;
 			return retVal;				
 		}
-		else
-			redirectAttributes.addFlashAttribute("message", "Skimo is already available for " + file.getOriginalFilename() + "!");
-
-		String retVal = "redirect:/" + "skimo/" + assetId;
+		String retVal = "skimo/" + assetId;
 		return retVal;
 	}
 
