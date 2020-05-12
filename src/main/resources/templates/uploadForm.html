@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Generate Skimo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="../img/favicon.ico" />
-	<link rel="stylesheet" href="../css/main.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Generate Skimo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../img/favicon.ico"/>
+    <link rel="stylesheet" href="../css/main.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-  <![endif]-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
 * {
   box-sizing: border-box;
 }
@@ -76,8 +77,12 @@
   font-family: 'Raleway', sans-serif;
   font-size: 18px;
 }
-</style>
-<style>
+
+
+
+
+    </style>
+    <style>
 html,body {
   font-family: 'Raleway', sans-serif;
   font-size: 18px;
@@ -98,118 +103,175 @@ h3 {
   color: #888;
   font-size: 1.5em;
 }
-</style>
+
+
+
+    </style>
 
 </head>
 
 <body class="home page page-template page-template-template-notitle-php">
 
-  <!--[if lt IE 8]>
-    <div class="alert alert-warning">
-      You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.    </div>
-  <![endif]-->
+<!--[if lt IE 8]>
+<div class="alert alert-warning">
+    You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+</div>
+<![endif]-->
 
-  <header class="banner navbar navbar-default navbar-fixed-top" role="banner">
+<header class="banner navbar navbar-default navbar-fixed-top" role="banner">
     <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="https://skimo.tv"><img src="../img/logo.png" alt="Skimo"></a>
-      </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://skimo.tv"><img src="../img/logo.png" alt="Skimo"></a>
+        </div>
 
     </div>
-  </header>
+</header>
 
-     <div class="wrap" role="document">
-      <div class="band band-default">
+<div class="wrap" role="document">
+    <div class="band band-default">
         <div class="container">
-		<br/>
-		<br/>
-    <h3>Generate Skimo</h3>
-<br/>
+            <br/>
+            <br/>
+            <h3>Generate Skimo</h3>
+            <br/>
+            <form class="md-form" method="POST" enctype="multipart/form-data" id="upload_form" onsubmit="uploadFile(); return false;">
+                <div class="btn btn-outline-secondary btn-lg"><input type="file" name="file" id="file"/></div>
+                <div class="file-path-wrapper">
+                    <br/>
+                    <input type="submit" value="Submit">
+                    <progress id="progress-bar" value="0" max="100" style="width:300px;"></progress>
+                    <h3 id="status"></h3>
+                    <p id="loaded_n_total"></p>
+                </div>
+            </form>
 
-<form class="md-form" method="POST" enctype="multipart/form-data" action="/videos/upload">
-  <div class="file-field">
-    <div class="btn btn-outline-secondary btn-lg">
-      <input type="file" name="file" accept=".mp4">
+            <div th:if="${message}">
+                <h3 th:text="${message}"/></h3>
+            </div>
+            <br/>
+            <br/>
+
+            <div class="center">
+                <h3> View your Skimos</h3>
+                <ul>
+                    <li th:each="url : ${urls}">
+                        <a th:href="${url}" th:text="${url}"/>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="center">
+                <h3> Download your Skimos</h3>
+                <ul>
+                    <li th:each="file : ${files}">
+                        <a th:href="${file}" th:text="${file}"/>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
     </div>
-    <div class="file-path-wrapper">
-     <br/>
-      <input class="file-path validate" type="submit" placeholder="Upload video" onchange="uploadFile()">
-        <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
-  <h3 id="status"></h3>
-  <p id="loaded_n_total"></p>
-    </div>
-  </div>
-</form>
-
-
-
-	<div th:if="${message}">
-		<h3 th:text="${message}"/>
-		</h3>
-	</div>
-<br/>
-<br/>
-
-	<div class = "center">
-	    <h3> View your Skimos</h3>
-		<ul>
-			<li th:each="url : ${urls}">
-				<a th:href="${url}" th:text="${url}" />
-			</li>
-		</ul>
-	</div>
-	
-	<div class = "center">
-	    <h3> Download your Skimos</h3>
-		<ul>
-			<li th:each="file : ${files}">
-				<a th:href="${file}" th:text="${file}" />
-			</li>
-		</ul>
-	</div>
-	
-
-	</div>
-	</div>
-	</div>
+</div>
 
 <footer class="content-info" role="contentinfo">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-8">
-        <ul id="menu-footer" class="footer-nav"><li class="active menu-home"><a href="/">Home</a></li>
-          <li class="menu-about-skimo"><a href="../about.html">About Skimo</a></li>
-          <li class="menu-about-skimo"><a href="../copyright.html">Copyright</a></li>
-          <li class="menu-about-skimo"><a href="../privacy.html">Privacy Policy</a></li>
-          <li class="menu-about-skimo"><a href="../terms.html">Terms of use</a></li>
-          <li class="menu-the-science"><a href="../plans.html">Plans</a></li>
-          <li class="menu-terms-of-use"><a href="mailto:support@skimo.tv">support@skimo.tv</a></li>
-        </ul>
-        <br>
-        
-        <a href="https://www.facebook.com/skimotv" title="Visit our page"><img src="../img/facebook.png" alt="Like us on Facebook"></a>
-        <a href="https://www.twitter.com/skimotv" title="Follow us on Twitter"><img src="../img/twitter.png" alt="Twitter"></a>
-      </div>
-      
-      <div class="col-sm-4 text-right">
-        <p style="color:white;font-size: smaller;"><small>&copy; 2020 Skimo TV, Inc, Sunnyvale, California, USA.  All rights reserved.</small></p>
-      </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <ul id="menu-footer" class="footer-nav">
+                    <li class="active menu-home"><a href="/">Home</a></li>
+                    <li class="menu-about-skimo"><a href="../about.html">About Skimo</a></li>
+                    <li class="menu-about-skimo"><a href="../copyright.html">Copyright</a></li>
+                    <li class="menu-about-skimo"><a href="../privacy.html">Privacy Policy</a></li>
+                    <li class="menu-about-skimo"><a href="../terms.html">Terms of use</a></li>
+                    <li class="menu-the-science"><a href="../plans.html">Plans</a></li>
+                    <li class="menu-terms-of-use"><a href="mailto:support@skimo.tv">support@skimo.tv</a></li>
+                </ul>
+                <br>
 
+                <a href="https://www.facebook.com/skimotv" title="Visit our page"><img src="../img/facebook.png" alt="Like us on Facebook"></a>
+                <a href="https://www.twitter.com/skimotv" title="Follow us on Twitter"><img src="../img/twitter.png" alt="Twitter"></a>
+            </div>
+
+            <div class="col-sm-4 text-right">
+                <p style="color:white;font-size: smaller;"><small>&copy; 2020 Skimo TV, Inc, Sunnyvale, California, USA. All rights reserved.</small></p>
+            </div>
+
+        </div>
     </div>
-  </div>
 </footer>
-  
+<script type="text/javascript">
+            function uploadFile() {
+//  var file = _("file").files[0];
+var file = document.getElementById('file').files[0];
+  var formData = new FormData();
+  formData.append("file", file);
+  console.log(file);
 
-  <script type='text/javascript' src="../js/jquery.js"></script>
-  <script type="text/javascript" src="../js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="../js/upload.js"></script>
-  <script type="text/javascript" src="../js/index.js"></script>
-  
+
+      $.ajax({
+        type: "POST",
+        url: "upload",
+        xhr: function () {
+            var myXhr = $.ajaxSettings.xhr();
+            if (myXhr.upload) {
+                myXhr.upload.addEventListener('progress', progressHandler, false);
+            }
+            return myXhr;
+        },
+        success: function (data) {
+            // your callback here
+            console.log(data)
+             document.write(data)
+             window.location.href = '../'+data;
+        },
+        error: function (error) {
+            // handle error
+             console.log(error);
+             window.location.href = '../error.html';
+        },
+        async: true,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        timeout: 60000
+    });
+
+}
+function _(el) {
+  return document.getElementById(el);
+}
+function progressHandler(event) {
+  _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+  var percent = (event.loaded / event.total) * 100;
+  _("progress-bar").value = Math.round(percent);
+  _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}
+
+function completeHandler(event) {
+  _("status").innerHTML = event.target.responseText;
+  _("progressBar").value = 0; //wil clear progress bar after successful upload
+}
+
+function errorHandler(event) {
+  _("status").innerHTML = "Upload Failed";
+}
+
+function abortHandler(event) {
+  _("status").innerHTML = "Upload Aborted";
+}
+
+</script>
+<script type='text/javascript' src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/index.js"></script>
+
 </body>
 </html>
