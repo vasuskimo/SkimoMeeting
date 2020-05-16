@@ -233,10 +233,10 @@ public class SkimoMeetingController {
 				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
 					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
 					int videoTime = ( int ) v;
-					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ) ) );
+					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime) );
 				} );
 
-				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) );
+				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0);
 				model.addAttribute("first_item",  first_item );			
 				model.addAttribute( "mediaList", skimoList );
 				
