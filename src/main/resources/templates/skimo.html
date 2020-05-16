@@ -47,6 +47,7 @@ h3 {
                         <img alt="skimo" src="skimologo.png">
                     </a>
                 </div>
+                <center><p>0:00</p></center>
             </li>
         
             <li class="glide__slide" th:each="media: ${mediaList}">
@@ -56,6 +57,7 @@ h3 {
                         <img alt="skimo" src="skimologo.png">
                     </a>
                 </div>
+                <center><p th:text=${media.currentTime}></p></center>
             </li>
         </ul>
     </div>
