@@ -7,6 +7,7 @@ public class Skimo implements Serializable
 	private String imageUrl;
 	private String videoUrl;
 	private String currentTime;
+	private String text;
  
 	public Skimo()
 	{
@@ -18,10 +19,11 @@ public class Skimo implements Serializable
 		this.videoUrl = videoUrl;
 	}
 
-	public Skimo( String imageUrl, String videoUrl, int cTime )
+	public Skimo( String imageUrl, String videoUrl, int cTime, String text)
 	{
 		this.imageUrl = imageUrl;
 		this.videoUrl = videoUrl;
+		this.text = text;
 		
 		int days, hours, minutes, seconds;
 
@@ -73,6 +75,14 @@ public class Skimo implements Serializable
 
 	public void setcurrentTime(String c) {
 		this.currentTime = c;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 }
