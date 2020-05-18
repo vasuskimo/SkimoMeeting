@@ -42,6 +42,7 @@ import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
 import tv.skimo.meeting.utils.LineCounter;
 import tv.skimo.meeting.utils.SceneDetector;
+import tv.skimo.meeting.utils.TesseractWrapper;
 import tv.skimo.meeting.utils.Zipper;
 
 @Controller
@@ -230,13 +231,15 @@ public class SkimoMeetingController {
 					return "404";
 				}
 				
+				final ArrayList<String> result = TesseractWrapper.go(assetId);
 				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
 					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
 					int videoTime = ( int ) v;
-					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime) );
+					log.info("text is " + result.get(i));
+					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime,result.get(i+1)) );
 				} );
 
-				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0);
+				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0, result.get(0));
 				model.addAttribute("first_item",  first_item );			
 				model.addAttribute( "mediaList", skimoList );
 				
