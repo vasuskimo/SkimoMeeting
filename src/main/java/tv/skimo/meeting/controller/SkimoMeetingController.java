@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -18,7 +17,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +47,8 @@ import tv.skimo.meeting.utils.LineCounter;
 import tv.skimo.meeting.utils.SceneDetector;
 import tv.skimo.meeting.utils.TesseractWrapper;
 import tv.skimo.meeting.utils.Zipper;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+
 
 @Controller
 public class SkimoMeetingController {
@@ -96,14 +98,11 @@ public class SkimoMeetingController {
 		return "uploadForm";
 	}
 	
-    @GetMapping(value = "/user")
-    public Authentication user(OAuth2Authentication principal) 
-    {
-      log.info("Principal is " + principal.getName());
-      LinkedHashMap<String, Object> details = (LinkedHashMap<String, Object>) principal.getUserAuthentication().getDetails();
-      log.info("email is " + details.get("email"));
-      return principal;
-    }
+	public OAuth2User getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return ((OAuth2AuthenticationToken)auth).getPrincipal();
+	}
+
 
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
@@ -117,12 +116,12 @@ public class SkimoMeetingController {
 	@PostMapping("/videos/upload")
 	@ResponseBody
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes, OAuth2Authentication principal) 
+			RedirectAttributes redirectAttributes) 
 	{
-	      log.info("Principal is " + principal.getName());
-	      LinkedHashMap<String, Object> details = (LinkedHashMap<String, Object>) principal.getUserAuthentication().getDetails();
-	      String email = (String) details.get("email");
-	      log.info("email is " + email);
+		
+		OAuth2User user = getCurrentUser();
+		String email = (String) user.getAttributes().get("email");
+	    log.info("email is " + email);
 	      
 		String assetId = "";
 		String accName = "basic/" + email + "/";
