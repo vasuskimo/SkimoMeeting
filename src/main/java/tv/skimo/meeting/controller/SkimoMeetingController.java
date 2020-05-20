@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -92,6 +95,15 @@ public class SkimoMeetingController {
 		}
 		return "uploadForm";
 	}
+	
+    @GetMapping(value = "/user")
+    public Authentication user(OAuth2Authentication principal) 
+    {
+      log.info("Principal is " + principal.getName());
+      LinkedHashMap<String, Object> details = (LinkedHashMap<String, Object>) principal.getUserAuthentication().getDetails();
+      log.info("email is " + details.get("email"));
+      return principal;
+    }
 
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
@@ -105,10 +117,15 @@ public class SkimoMeetingController {
 	@PostMapping("/videos/upload")
 	@ResponseBody
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) 
-	{	
+			RedirectAttributes redirectAttributes, OAuth2Authentication principal) 
+	{
+	      log.info("Principal is " + principal.getName());
+	      LinkedHashMap<String, Object> details = (LinkedHashMap<String, Object>) principal.getUserAuthentication().getDetails();
+	      String email = (String) details.get("email");
+	      log.info("email is " + email);
+	      
 		String assetId = "";
-		String accName = "basic/vasusrini@gmail.com/";
+		String accName = "basic/" + email + "/";
 		
 		storageService.store(file,accName);
 		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR + accName , file.getOriginalFilename());
