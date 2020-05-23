@@ -18,5 +18,5 @@ public class Constants
 	public static final String JS_DIR = "/js/";
 	public static final String CSS_DIR = "/css/";
 	public static final String UPLOAD_DIR = "./upload-dir/";
-	public static final String TESS_DATA = "/usr/local/Cellar/tesseract/4.1.1/share/tessdata";
+	public static final String TESS_DATA = "/usr/share/tesseract-ocr/4.00/tessdata";
 }
