@@ -10,8 +10,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
    protected void configure(HttpSecurity http) throws Exception {
 	   
        String[] resources = new String[]{
-               "/","/css/**","/js/**","/img/**",
-               "/oauth.html", "/about.html", "/copyright.html", 
+               "/","/css/**","/js/**","/img/**","/**/skimo.html",
+               "/skimo/**","/about.html", "/copyright.html", 
                "/privacy.html", "/plans.html", "/terms.html"
        };
 
