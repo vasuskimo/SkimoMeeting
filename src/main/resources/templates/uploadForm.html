@@ -146,7 +146,7 @@ h3 {
                     <br/>
                     <input type="submit" value="Submit">
                     <progress id="progress-bar" value="0" max="100" style="width:300px;"></progress>
-                    <h3 id="status"></h3>
+                    <p id="status"></h3>
                     <p id="loaded_n_total"></p>
                 </div>
             </form>
@@ -217,7 +217,7 @@ var file = document.getElementById('file').files[0];
 
       $.ajax({
         type: "POST",
-        url: "upload",
+        url: "generate",
         xhr: function () {
             var myXhr = $.ajaxSettings.xhr();
             if (myXhr.upload) {
