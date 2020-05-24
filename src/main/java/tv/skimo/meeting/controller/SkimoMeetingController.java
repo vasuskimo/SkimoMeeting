@@ -66,7 +66,7 @@ public class SkimoMeetingController {
 		this.storageService = storageService;
 	}
 
-	@GetMapping("/generate")
+	@GetMapping("/myskimo")
 	public String listUploadedFiles(Model model) throws IOException 
 	{
 		List<String> filesList =  storageService.loadAll().map(
@@ -113,12 +113,12 @@ public class SkimoMeetingController {
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	}
 
-	@PostMapping("/generate")
+	@PostMapping("/myskimo")
 	@ResponseBody
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) 
 	{
-		log.info("Inside generate post method");
+		log.info("Inside My Skimo post method");
 		OAuth2User user = getCurrentUser();
 		String email = (String) user.getAttributes().get("email");
 	    log.info("email is " + email);
