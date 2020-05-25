@@ -1,0 +1,34 @@
+
+body {
+    background-color: #f0f0f0;
+    font: 100% / 162% verdana, arial, helvetica, sans-serif;
+ }
+
+#video-container {
+    position: relative;
+    max-width: 40em;
+    margin: auto;
+    border: 1px solid #000;
+    box-shadow: 0.25em 0.25em 0.25em rgba( 0, 0, 0, 0.3 );
+ }
+
+#video-container video {
+    display: block;
+    width: 100%;
+    height: auto;
+ }
+
+#video-container img {
+    position: fixed;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    position: fixed;
+top: 50%;
+left: 50%;
+/* bring your own prefixes */
+transform: translate(-50%, -50%);
+ }
+.hide {
+    display: none;
+ }
