@@ -64,23 +64,21 @@ public class AssetUtil
 	    File file3 = new File(Constants.PUBLIC + assetId + Constants.CSS_DIR);
 	    result = file3.mkdir();
         
-        File sourceSlideJS = new File("public/js/glide.js");
-        File destSlideJS = new File(Constants.PUBLIC + assetId + "/js/glide.js");
-        
-        File sourceCSS = new File("public/css/style.css");
-        File destCSS = new File(Constants.PUBLIC + assetId + "/css/style.css");
+        File sourceRevealJS = new File("public/js/reveal.js");
+        File destRevealJS = new File(Constants.PUBLIC + assetId + "/js/reveal.js");
 
-        File sourceIndexJS = new File("public/js/index.js");
-        File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/index.js");
+        File sourceIndexJS = new File("public/js/video-player.js");
+        File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/video-player.js");
+        
+        File sourceScreenCSS = new File("public/css/screen.css");
+        File destScreenCSS = new File(Constants.PUBLIC + assetId + "/css/screen.css");
+        
+        File sourceRevealCSS = new File("public/css/reveal.css");
+        File destRevealCSS = new File(Constants.PUBLIC + assetId + "/css/reveal.css");
+        
         
         File sourceLogo = new File("public/img/skimologo.png");
         File destLogo = new File(Constants.PUBLIC + assetId + "/skimologo.png");
-       
-        File sourceLeftImg = new File("public/img/line-angle-left.png");
-        File destLeftImg = new File(Constants.PUBLIC + assetId + "/line-angle-left.png");
-        
-        File sourceRightImg = new File("public/img/line-angle-right.png");
-        File destRightImg = new File(Constants.PUBLIC + assetId + "/line-angle-right.png");
         
         File sourceFavIcon = new File("public/img/favicon.ico");
         File destFavIcon = new File(Constants.PUBLIC + assetId + "/favicon.ico");
@@ -88,12 +86,11 @@ public class AssetUtil
 
         try 
         {
-			Files.copy(sourceSlideJS.toPath(), destSlideJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
-			Files.copy(sourceCSS.toPath(), destCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceRevealJS.toPath(), destRevealJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceScreenCSS.toPath(), destScreenCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceRevealCSS.toPath(), destRevealCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
-			Files.copy(sourceLeftImg.toPath(), destLeftImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
-			Files.copy(sourceRightImg.toPath(), destRightImg.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceFavIcon.toPath(), destFavIcon.toPath(),StandardCopyOption.REPLACE_EXISTING);
         } 
         catch (IOException e) 
