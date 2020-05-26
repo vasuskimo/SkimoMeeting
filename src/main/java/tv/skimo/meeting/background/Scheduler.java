@@ -36,8 +36,8 @@ public class Scheduler
 			
 				// look for directories that don't have js, css and img
 				// provision asset directory 
-				// detect first scene, thumbnails and timecodes that has scene changes
-				// ===================================================================
+				// detect timecodes that has scene changes
+				// =======================================
 				for(int i=0; i < dirs.length; i++)
 				{
 					if((!dirs[i].getName().equals("js")) && (!dirs[i].getName().equals("css")) && 
@@ -49,6 +49,8 @@ public class Scheduler
 						{
 							log.info("Background task: kicking off Skimo for " + assetId);
 							AssetUtil.provisionAsset(assetId, Constants.PUBLIC + assetId + Constants.ASSET_NAME);
+							SceneDetector.generateFirst(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
+							SceneDetector.generateThumbnail(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SceneDetector.generateSkimo(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 						}
 					}	
