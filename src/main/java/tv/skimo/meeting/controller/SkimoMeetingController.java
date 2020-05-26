@@ -189,7 +189,7 @@ public class SkimoMeetingController {
 		
 		try 
 		{
-			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 8))
+			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 3))
 			{
 				List<String> timeCodeList;
 				try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
@@ -280,7 +280,7 @@ public class SkimoMeetingController {
 						log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 			    	}
 			    }
-				return "skimo";
+				return "busy.html";
 			}
 			else
 			{
