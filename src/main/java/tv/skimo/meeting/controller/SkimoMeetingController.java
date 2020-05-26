@@ -139,6 +139,8 @@ public class SkimoMeetingController {
 				}
 				else
 				{
+					SceneDetector.generateFirst(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);	
+					SceneDetector.generateThumbnail(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 					SceneDetector.generateSkimo(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 				}
 			} 
