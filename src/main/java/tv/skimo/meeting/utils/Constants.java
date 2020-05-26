@@ -2,7 +2,7 @@ package tv.skimo.meeting.utils;
 
 public class Constants 
 {
-	public static final int SKIMO_JOB_FREQUENCY_IN_SECONDS = 300000;
+	public static final int SKIMO_JOB_FREQUENCY_IN_SECONDS = 60000;
 	public static final int CLEANUP_TASK_FREQUENCY_IN_SECONDS = 86400000;
 	public static final int DAILY = 1;
 	public static final int WEEKLY = 7;
