@@ -4,7 +4,6 @@ import java.io.Serializable;
 public class Skimo implements Serializable
 {
 	private static final long serialVersionUID = -375414813253543648L;
-	private String imageUrl;
 	private String videoUrl;
 	private String currentTime;
 	private String text;
@@ -13,15 +12,13 @@ public class Skimo implements Serializable
 	{
 	}
 	
-	public Skimo( String imageUrl, String videoUrl)
+	public Skimo( String videoUrl)
 	{
-		this.imageUrl = imageUrl;
 		this.videoUrl = videoUrl;
 	}
 
-	public Skimo( String imageUrl, String videoUrl, int cTime, String text)
+	public Skimo( String videoUrl, int cTime, String text)
 	{
-		this.imageUrl = imageUrl;
 		this.videoUrl = videoUrl;
 		this.text = text;
 		
@@ -47,16 +44,6 @@ public class Skimo implements Serializable
 				this.currentTime = Integer.toString(hours) + ":" + Long.toString(minutes) + ":" + 
 					Long.toString(seconds);
 			
-	}
-
-	public String getImageUrl()
-	{
-		return imageUrl;
-	}
-
-	public void setImageUrl( String imageUrl )
-	{
-		this.imageUrl = imageUrl;
 	}
 
 	public String getVideoUrl()
