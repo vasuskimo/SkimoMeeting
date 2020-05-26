@@ -13,7 +13,7 @@ public class SceneDetector
 { 
 	private static final Logger log = LoggerFactory.getLogger(SceneDetector.class);
 
-	public static void generatdeFirst(String asset, String assetId)
+	public static void generateFirst(String asset, String assetId)
 	{
         String cwd = System.getProperty(Constants.USER_DIR);
         
