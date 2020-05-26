@@ -282,7 +282,7 @@ public class SkimoMeetingController {
 						log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
 			    	}
 			    }
-				return "upload";
+				return "skimo";
 			}
 			else
 			{
