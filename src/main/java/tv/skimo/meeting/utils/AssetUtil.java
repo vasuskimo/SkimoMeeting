@@ -77,9 +77,14 @@ public class AssetUtil
         File sourceRevealCSS = new File("public/css/reveal.css");
         File destRevealCSS = new File(Constants.PUBLIC + assetId + "/css/reveal.css");
         
+        File sourceMainMinCSS = new File("public/css/main.min.css");
+        File destMainMinCSS = new File(Constants.PUBLIC + assetId + "/css/main.min.css");
         
         File sourceLogo = new File("public/img/skimologo.png");
         File destLogo = new File(Constants.PUBLIC + assetId + "/skimologo.png");
+        
+        File sourceHLogo = new File("public/img/logo.png");
+        File destHLogo = new File(Constants.PUBLIC + assetId + "/logo.png");
         
         File sourceFavIcon = new File("public/img/favicon.ico");
         File destFavIcon = new File(Constants.PUBLIC + assetId + "/favicon.ico");
@@ -90,8 +95,10 @@ public class AssetUtil
 			Files.copy(sourceRevealJS.toPath(), destRevealJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceScreenCSS.toPath(), destScreenCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceRevealCSS.toPath(), destRevealCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceMainMinCSS.toPath(), destMainMinCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceHLogo.toPath(), destHLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceFavIcon.toPath(), destFavIcon.toPath(),StandardCopyOption.REPLACE_EXISTING);
         } 
         catch (IOException e) 
