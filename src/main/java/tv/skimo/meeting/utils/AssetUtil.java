@@ -41,7 +41,8 @@ public class AssetUtil
         File dest = new File(Constants.PUBLIC + assetId + Constants.ASSET_NAME);
 		try 
 		{
-			Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			log.info("moving the asset file " + Constants.ASSET_NAME);
+			Files.move(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
 		} 
 		catch (IOException e) 
 		{
