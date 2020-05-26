@@ -119,7 +119,7 @@ public class Scheduler
 	    }
 	    long diff = new Date().getTime() - dir.lastModified();
 
-    	if (diff > Constants.DAILY * 24 * 60 * 60 * 1000)
+    	if (diff > Constants.WEEKLY * 24 * 60 * 60 * 1000)
     	{
     		if(!dir.isDirectory())
     		   dir.delete();
