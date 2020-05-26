@@ -139,8 +139,6 @@ public class SkimoMeetingController {
 				}
 				else
 				{
-					SceneDetector.generateFirst(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
-					SceneDetector.generateThumbnail(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 					SceneDetector.generateSkimo(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 				}
 			} 
@@ -230,7 +228,6 @@ public class SkimoMeetingController {
 				List<String> finalImgList = imgList;
 				
 				List<String> updatedTimeCodeList =new ArrayList<>(1000);
-				List<String> updatedImgList = new ArrayList<>(1000);
 
 				try
 				{
@@ -238,7 +235,6 @@ public class SkimoMeetingController {
 					{
 						int ix = updatedList.get(i);
 						updatedTimeCodeList.add(timeCodeList.get(ix).toString());
-						updatedImgList.add(finalImgList.get(ix).toString());
 					}
 				}
 				catch(Exception e)
@@ -252,10 +248,10 @@ public class SkimoMeetingController {
 					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
 					int videoTime = ( int ) v;
 					log.info("text is " + result.get(i));
-					skimoList.add( new Skimo( this.baseUrl.concat( "img/" ).concat( updatedImgList.get( i ) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime,result.get(i+1)) );
+					skimoList.add( new Skimo( this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime,result.get(i+1)) );
 				} );
 
-				Skimo  first_item =  new Skimo( this.baseUrl.concat( "img/" ).concat(updatedImgList.get( 0) ), this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0, result.get(0));
+				Skimo  first_item =  new Skimo( this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0, result.get(0));
 				model.addAttribute("first_item",  first_item );			
 				model.addAttribute( "mediaList", skimoList );
 				
