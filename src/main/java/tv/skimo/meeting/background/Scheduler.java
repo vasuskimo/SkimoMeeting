@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import tv.skimo.engine.SkimoEngine;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
-import tv.skimo.meeting.utils.SkimoEngine;
 
 @Component
 public class Scheduler 
