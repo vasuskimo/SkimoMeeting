@@ -8,6 +8,7 @@ public class Constants
 	public static final int WEEKLY = 7;
 	public static final String PUBLIC = "public/";
 	public static final String ASSET_NAME = "/source.mp4";
+	public static final String TIME_CODE_FILE = "/timecodes.txt";
 	public static final String ROOT = "/";
 	public static final String USER_DIR = "user.dir";
 	public static final String USER_HOME = "user.home";
