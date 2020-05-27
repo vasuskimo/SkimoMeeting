@@ -107,13 +107,24 @@ public class Scheduler
         }
 	}
 	
-	public void deleteFiles(File dir) 
+	public  void cleanupDir(String name) 
+	{
+		File dir = new File(name);
+		
+		log.info("Cleanup  directory " + name);
+
+		deleteFilesRegardless(dir);
+		dir.delete();
+	}
+	
+	public  void deleteFiles(File dir) 
 	{
 	    File[] files = dir.listFiles();
 	    if(files != null) 
 	    {
 	        for (final File file : files) 
 	        {
+	           log.info(file.getAbsolutePath());
 	           deleteFiles(file);
 	        }
 	    }
@@ -125,10 +136,26 @@ public class Scheduler
     		   dir.delete();
     	}
 	}
+
+	public  void deleteFilesRegardless(File dir) 
+	{
+	    File[] files = dir.listFiles();
+	    if(files != null) 
+	    {
+	        for (final File file : files) 
+	        {
+	           log.info(file.getAbsolutePath());
+	           deleteFilesRegardless(file);
+	        }
+	    }
+    	if(!dir.isDirectory())
+    		dir.delete();
+	}
 	
 	public static void main(String args[])
 	{
 		Scheduler s = new Scheduler();
-		s.executeSkimoJobs();
+		//s.executeSkimoJobs();
+		s.cleanupDir("public/28bb529e/img/");
 	}
 }
