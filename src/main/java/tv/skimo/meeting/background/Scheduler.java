@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
-import tv.skimo.meeting.utils.SceneDetector;
+import tv.skimo.meeting.utils.SkimoEngine;
 
 @Component
 public class Scheduler 
@@ -49,9 +49,9 @@ public class Scheduler
 						{
 							log.info("Background task: kicking off Skimo for " + assetId);
 							AssetUtil.provisionAsset(assetId, Constants.PUBLIC + assetId + Constants.ASSET_NAME);
-							SceneDetector.generateFirst(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
-							SceneDetector.generateThumbnail(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-							SceneDetector.generateSkimo(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+							SkimoEngine.generatePoster(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
+							SkimoEngine.generateThumbnails(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+							SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 						}
 					}	
 					
