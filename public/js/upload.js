@@ -18,7 +18,7 @@ function uploadFile() {
 }
 
 function progressHandler(event) {
-  _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+  _("loaded_n_total").innerHTML = "Uploaded " + (event.loaded/1000000).toFixed(2) + " MB of " + (event.total/1000000).toFixed(2) + " MB";
   var percent = (event.loaded / event.total) * 100;
   _("progressBar").value = Math.round(percent);
   _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
