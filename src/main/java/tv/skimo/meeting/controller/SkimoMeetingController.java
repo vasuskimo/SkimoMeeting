@@ -46,7 +46,6 @@ import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
 import tv.skimo.meeting.utils.LineCounter;
 import tv.skimo.meeting.utils.SkimoEngine;
-import tv.skimo.meeting.utils.TesseractWrapper;
 import tv.skimo.meeting.utils.Zipper;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
@@ -247,7 +246,7 @@ public class SkimoMeetingController {
 					return "404";
 				}
 				
-				final ArrayList<String> result = TesseractWrapper.go(assetId);
+				final ArrayList<String> result = SkimoEngine.getTextFromImage(assetId);
 				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
 					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
 					int videoTime = ( int ) v;
