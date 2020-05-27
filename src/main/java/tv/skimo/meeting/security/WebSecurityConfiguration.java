@@ -11,7 +11,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	   
        String[] resources = new String[]{
                "/","/css/**","/js/**","/img/**","favicon.ico","logo.png","favicon.ico",
-               "/**/skimo.html","/skimo/**","/about.html", 
+               "/**/skimo.html","/skimo/**","/about.html", "/**/*.css", "/oauth2/**",
                "/copyright.html", "/privacy.html", "/plans.html", "/terms.html"
        };
 
