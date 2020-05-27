@@ -35,6 +35,7 @@ import org.thymeleaf.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tv.skimo.meeting.background.Scheduler;
 import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.lib.ThymeLeafConfig;
@@ -149,10 +150,11 @@ public class SkimoMeetingController {
 				log.error("Threw an exception in SkimoMeetingController::handleFileUpload, full stack trace follows:", e);
 			}
 			String retVal = "skimo/" + assetId;
-			return retVal;				
+			
+			return(retVal);			
 		}
 		String retVal = "skimo/" + assetId;
-		return retVal;
+		return(retVal);			
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)
@@ -220,7 +222,7 @@ public class SkimoMeetingController {
 						i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
 					}
 				}
-			    File imgDir = new File(Constants.PUBLIC + assetId +"/img");
+			    File imgDir = new File(Constants.PUBLIC + assetId + Constants.IMG_DIR);
 				List<String> imgList = FileSorter.sort(imgDir);
 				
 				File videoFile = new File(videoResource);
@@ -265,6 +267,10 @@ public class SkimoMeetingController {
 
 			    if(!indexFile.exists())
 			    {
+			    	Scheduler s = new Scheduler();
+			    	s.cleanupDir(Constants.PUBLIC + assetId + Constants.IMG_DIR);
+			    	File file = new File(Constants.PUBLIC + assetId + Constants.TIME_CODE_FILE);
+			    	file.delete();
 			        String[] skimoFiles = {Constants.PUBLIC + assetId};
 			        String zipFile = "upload-dir/" + assetId + ".zip";
 			        Zipper zipUtil = new Zipper();
