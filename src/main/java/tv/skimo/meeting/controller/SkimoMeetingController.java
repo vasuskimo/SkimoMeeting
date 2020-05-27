@@ -45,7 +45,7 @@ import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
 import tv.skimo.meeting.utils.LineCounter;
-import tv.skimo.meeting.utils.SceneDetector;
+import tv.skimo.meeting.utils.SkimoEngine;
 import tv.skimo.meeting.utils.TesseractWrapper;
 import tv.skimo.meeting.utils.Zipper;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -140,9 +140,9 @@ public class SkimoMeetingController {
 				}
 				else
 				{
-					SceneDetector.generateFirst(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);	
-					SceneDetector.generateThumbnail(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
-					SceneDetector.generateSkimo(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SkimoEngine.generatePoster(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);	
+					SkimoEngine.generateThumbnails(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SkimoEngine.detectScenes(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 				}
 			} 
 			catch (IOException e) 
