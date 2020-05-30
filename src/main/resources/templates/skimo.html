@@ -68,12 +68,249 @@ h1 {
 <script src="js/video-player.js"></script>
 
 <script>
+// Turns a string into an element
+function makeElement(str){
+	var el = document.createElement("div");
+	el.innerHTML = str;
+	return el.children[0];
+}
 
-  Reveal.initialize({
-    transition: 'linear'
-  });
+// get each slide
+Array.from(document.querySelectorAll(".slides > *"))
+// For each slide
+.forEach((slide, index) => {
+	// get the video source link
+	var relativePath = `#/${index}`;
+
+	// Make the element we'll be adding
+	// The margin is the same as the video
+	var wrapper = makeElement(`
+		<div style="text-align: right; margin: 10px 120px">
+			<a>Share</a>
+		</div>
+	`);
+
+	// Grab the link element from it
+	var linkElement = wrapper.querySelector("a");
+	linkElement.href = relativePath;
+
+	// When the link is clicked
+	linkElement.onclick = () => {
+		// put the absolute path into the clipboard
+		navigator.clipboard.writeText(linkElement.href);
+		alert("Link copied to clipboard");
+	}
+
+	// Add the link to the slide
+	slide.appendChild(wrapper);
+})
+
+/*
+	Update URL every 100ms to match the slide
+*/
+var intervalID = window.setInterval(updateURL, 100);
+var prevURL = "";
+function updateURL(){
+	var newURL = window.location.pathname + "#/" + Reveal.getIndices().h;
+	if (newURL !== prevURL){
+		window.location.href = newURL;
+		prevURL = newURL;
+	} else {
+		// No Need to renavigate
+	}
+}
 
 </script>
+<!-- End Share Link Code -->
+
+
+<!-- Start Search Box Code -->
+<style>
+	#searchModal {
+		position: fixed;
+		right: 0;
+		top: 0;
+		transition: transform 0.5s;
+		padding: 5px 2px 5px 1em;
+		background: white;
+		z-index: 99999;
+		border-radius: 5px;
+		border: 1px solid;
+		margin-right: 1em;
+		box-shadow: 2px 2px 5px gray;
+	}
+
+	#searchBarWrapper {
+		display: grid;
+		grid-template-columns: auto 3em 2em 2em;
+		height: 2em;
+	}
+
+	#searchBar {
+		width: 7em;
+		border: none;
+	}
+
+	#searchBar:focus {
+		outline: none;
+	}
+
+	#searchBar::placeholder {
+		color: lightgrey;
+	}
+
+	.searchNavigation {
+		width: 2em;
+		position: relative;
+		cursor: pointer;
+		overflow: hidden;
+	}
+
+	.searchArrow {
+		transform: translate(40%, 44%);
+		height: 100%;
+		width: 100%;
+	}
+	.searchArrow:before, .searchArrow:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 0.5em;
+		height: 2px;
+		border-radius: 1px;
+		background-color: gray;
+		transition: all 0.15s ease, background-color 0.8s ease;
+		-webkit-transform-origin: 2px 2px;
+		transform-origin: 0.5px;
+		will-change: transform;
+	}
+	.searchArrow:before {
+		transform: rotate(45deg);
+	}
+	.searchArrow:after {
+		transform: rotate(-45deg);
+	}
+
+	#moveSearchForward {
+		transform: rotate(-90deg);
+		border-bottom: solid 1px lightgray;
+	}
+
+	#moveSearchBack {
+		transform: rotate(90deg);
+	}
+
+	#searchSlideNumber {
+		padding: 5px;
+		border-right: solid 1px lightgray;
+	}
+
+</style>
+<div id="searchModal" class="slideIn">
+	<div id="searchBarWrapper">
+		<input type="text" id="searchBar" placeholder="search" />
+		<span id="searchSlideNumber">0/0</span>
+		<div id="moveSearchBack" class="searchNavigation"><div class="searchArrow"></div></div>
+		<div id="moveSearchForward" class="searchNavigation"><div class="searchArrow"></div></div>
+	</div>
+</div>
+<script>
+
+	Reveal.initialize({
+		transition: 'linear'
+	});
+
+	/* 
+	Search Modal
+	Author: Tyler Whitehouse
+	*/
+	// Constants
+	var slideSearchIndex = 0, slideSearchResults = []
+	var slidesLength = document.querySelector(".slides").children.length;
+
+	// DOM References
+	var banner = document.querySelector("header");
+	var searchModal = document.getElementById("searchModal");
+	var searchBar = document.getElementById("searchBar");
+	var moveSearchBack = document.getElementById("moveSearchBack");
+	var moveSearchForward = document.getElementById("moveSearchForward");
+	var searchSlideNumber = document.getElementById("searchSlideNumber");
+
+	// Configure the modal position
+	searchModal.style.top = banner.offsetHeight + "px";
+
+	// move Right
+	moveSearchForward.onclick = SearchForward;
+
+	// move Left
+	moveSearchBack.onclick = SearchBack;
+
+	// make the search
+	searchBar.oninput = executeSearch;
+
+	function executeSearch(){
+		updateSearchResults();
+		slideSearchIndex = 0;
+		updateSearchSlideNumberText();
+		gotoSearchSlide()
+	}
+
+	function getSearchQuery(){
+		return searchBar.value.trim().toLowerCase();
+	}
+
+	function updateSearchResults(){
+		query = getSearchQuery();
+
+		if (query === ""){
+			slideSearchResults = [];
+		} else {
+			// Make an array...
+			slideSearchResults = Array
+			// ...from all of the hidden inputs
+			.from(document.querySelectorAll("input[type=hidden]"))
+				// Convert elements to objects
+				.map((element, index) => {
+					return {
+						value: element.value,
+						index: index
+					}
+				})
+				// Keep objects that contain the query
+				.filter(o => {
+					return o.value.indexOf(query) != -1;
+				})
+				// Convert objects to just the indexes
+				.map(o => o.index);
+		}
+	}
+
+	function gotoSearchSlide(){
+		Reveal.slide(slideSearchResults[slideSearchIndex]);
+	}
+
+	function updateSearchSlideNumberText(){
+		searchSlideNumber.innerText = `${slideSearchResults.length > 0 ? slideSearchIndex + 1 : 0}/${slideSearchResults.length}`;
+	}
+
+	function SearchBack(){
+		searchDiff(-1);
+	}
+
+	function SearchForward(){
+		searchDiff(1);
+	}
+
+	function searchDiff(diff){
+		slideSearchIndex += diff;
+		// Wrap around
+		slideSearchIndex = (slideSearchIndex + slideSearchResults.length) % slideSearchResults.length;
+		gotoSearchSlide();
+		updateSearchSlideNumberText();
+	}
+</script>
+<!-- End Search Box Code -->
 </body>
 </html>
 
