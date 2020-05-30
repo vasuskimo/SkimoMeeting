@@ -67,7 +67,12 @@ h1 {
 <script src="js/reveal.js"></script>
 <script src="js/video-player.js"></script>
 
+<!-- Start Share Link and URL update Code -->
 <script>
+/*
+	Add a "Share" link to every slide
+	Author: Tyler Whitehouse
+*/
 // Turns a string into an element
 function makeElement(str){
 	var el = document.createElement("div");
@@ -97,16 +102,52 @@ Array.from(document.querySelectorAll(".slides > *"))
 	// When the link is clicked
 	linkElement.onclick = () => {
 		// put the absolute path into the clipboard
-		navigator.clipboard.writeText(linkElement.href);
-		alert("Link copied to clipboard");
+		copyTextToClipboard(linkElement.href);
+		//navigator.clipboard.writeText(linkElement.href);
+		//alert("Link copied to clipboard");
 	}
 
 	// Add the link to the slide
 	slide.appendChild(wrapper);
 })
 
+function copyTextToClipboard(txt){
+	if (navigator.clipboard !== undefined){
+		navigator.clipboard.writeText(txt);
+		alert("Link copied to clipboard");
+	} else {
+		// Make a hidden element to copy the text out of
+		var copyInput = makeElement(`
+			<input style="position: fixed; left: 500px;" value="${txt}"/>
+		`);
+
+		// Add the element to the body
+		document.body.appendChild(copyInput);
+
+		// Select the text field
+		copyInput.select();
+		copyInput.setSelectionRange(0, 99999); /*For mobile devices*/
+
+		// Copy the text inside the text field
+		var successfulCopy = document.execCommand("copy");
+
+		// remove the element from the body
+		copyInput.remove();
+
+		if (successfulCopy){
+			alert("Link copied to clipboard");
+		} else {
+			// can't copy to clipboard automatically
+			alert("Unable to automatically copy link to clipboard");
+		}
+
+
+	}
+}
+
 /*
 	Update URL every 100ms to match the slide
+	Author: Tyler Whitehouse
 */
 var intervalID = window.setInterval(updateURL, 100);
 var prevURL = "";
@@ -313,4 +354,3 @@ function updateURL(){
 <!-- End Search Box Code -->
 </body>
 </html>
-
