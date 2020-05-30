@@ -166,12 +166,7 @@ public class SkimoMeetingController {
 	public String viewMedia( Model model,@PathVariable(name="assetId") String assetId )
 	{
 		File dir = new File(Constants.PUBLIC + assetId);
-		String timeCodeResource = dir + "/timecodes.txt";
-		String videoResource = dir  + Constants.ASSET_NAME;
-        Writer writer = null;
         File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
-        File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
-		int noOfLines = 0;
 		
         if(indexFile.exists())
         {
@@ -180,126 +175,12 @@ public class SkimoMeetingController {
         else
         {
         	log.info("skimo.html file does not exist for " + assetId);
-        }
-        File f = new File(timeCodeResource); 
-		
-		if(f.exists())
-		{
-			noOfLines = LineCounter.count(timeCodeResource);
-		}
-		
-		try 
-		{
-			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 3))
-			{
-				List<String> timeCodeList;
-				try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
-				{
-					timeCodeList = lines.collect( Collectors.toList() );
-				}
-				catch ( IOException e )
-				{
-					log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
-					return "error.html";
-				}
-				timeCodeList.add(0,"0.0");
-
-				List<Integer> updatedList = new ArrayList<>();
-				String initVal = timeCodeList.get( 0 );
-				if ( initVal == null )
-				{
-					log.warn("initVal is null for assetId " + assetId);
-					return "error.html";
-				}
-				updatedList.add(0);
-				for ( int i = 0; i < timeCodeList.size(); i++ )
-				{ 
-					if ( ( Double.parseDouble( timeCodeList.get( i ) ) - Double.parseDouble( initVal ) ) > 30 )
-					{
-						updatedList.add(i );
-						initVal = timeCodeList.get( i );
-						i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
-					}
-				}
-			    File imgDir = new File(Constants.PUBLIC + assetId + Constants.IMG_DIR);
-				List<String> imgList = FileSorter.sort(imgDir);
-				
-				File videoFile = new File(videoResource);
-				String videoFileName = videoFile.getName();
-				baseUrl = "../" +assetId  + "/";
-				ArrayList<Skimo> skimoList = new ArrayList<>();
-				List<String> finalImgList = imgList;
-				
-				List<String> updatedTimeCodeList =new ArrayList<>(1000);
-
-				try
-				{
-					for(int  i=0; i < updatedList.size();  i++)
-					{
-						int ix = updatedList.get(i);
-						updatedTimeCodeList.add(timeCodeList.get(ix).toString());
-					}
-				}
-				catch(Exception e)
-				{
-					log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
-					return "404";
-				}
-				
-				final ArrayList<String> result = SkimoEngine.getTextFromImage(assetId);
-				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
-					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
-					int videoTime = ( int ) v;
-					log.info("text is " + result.get(i));
-					skimoList.add( new Skimo( this.baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime,result.get(i+1)) );
-				} );
-
-				Skimo  first_item =  new Skimo( this.baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0, result.get(0));
-				model.addAttribute("first_item",  first_item );			
-				model.addAttribute( "mediaList", skimoList );
-				
-				
-			    Context context = new Context();
-			    context.setVariable("first_item", first_item);
-			    context.setVariable("mediaList", skimoList);
-
-
-			    if(!indexFile.exists())
-			    {
-			    	Scheduler s = new Scheduler();
-			    	s.cleanupDir(Constants.PUBLIC + assetId + Constants.IMG_DIR);
-			    	File file = new File(Constants.PUBLIC + assetId + Constants.TIME_CODE_FILE);
-			    	file.delete();
-			        String[] skimoFiles = {Constants.PUBLIC + assetId};
-			        String zipFile = "upload-dir/" + assetId + ".zip";
-			        Zipper zipUtil = new Zipper();
-			    	try 
-			    	{
-			    		writer = new FileWriter(Constants.PUBLIC + assetId + "/skimo.html");
-			    		writer.write(ThymeLeafConfig.getTemplateEngine().process("skimo.html", context));
-			    		writer.close();
-			            zipUtil.zip(skimoFiles, zipFile);
-			    	} 
-			    	catch (Exception e) 
-			    	{
-						log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
-			    	}
-			    }
-				return "busy.html";
-			}
-			else
-			{
 				if(dir.exists())
 					return "busy.html";
 				else
 					return "404";
-			}
 		} 
-		catch (Exception e) 
-		{
-			log.error("Threw an exception in Scheduler::viewMedia, full stack trace follows:", e);
-		}
-		return "404";
+
 	}
 
 }
