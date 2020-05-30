@@ -1,18 +1,33 @@
 package tv.skimo.meeting.background;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
 
 import tv.skimo.engine.SkimoEngine;
+import tv.skimo.meeting.lib.FileSorter;
+import tv.skimo.meeting.lib.ThymeLeafConfig;
+import tv.skimo.meeting.model.Skimo;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
+import tv.skimo.meeting.utils.LineCounter;
+import tv.skimo.meeting.utils.Zipper;
 
 @Component
 public class Scheduler 
@@ -33,6 +48,7 @@ public class Scheduler
 			{
 				File[] dirs = new File(Constants.PUBLIC).listFiles(File::isDirectory);
 				File[] assetDirs = null;
+				String assetId = "";
 			
 				// look for directories that don't have js, css and img
 				// provision asset directory 
@@ -43,7 +59,7 @@ public class Scheduler
 					if((!dirs[i].getName().equals("js")) && (!dirs[i].getName().equals("css")) && 
 						(!dirs[i].getName().equals("img"))) 
 					{
-						String assetId = dirs[i].getName();
+						assetId = dirs[i].getName();
 						assetDirs = new File(Constants.PUBLIC + dirs[i].getName()).listFiles(File::isDirectory);
 						if(assetDirs.length < 1)
 						{
@@ -53,7 +69,10 @@ public class Scheduler
 							SkimoEngine.generateThumbnails(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 						}
-					}	
+				        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
+					    if(!indexFile.exists())
+					    	generateSkimoFile(assetId);
+					}
 					
 				}
 			}
@@ -106,6 +125,122 @@ public class Scheduler
 			}
         }
 	}
+
+	public void generateSkimoFile(String assetId) 
+	{
+		File dir = new File(Constants.PUBLIC + assetId);	
+		String timeCodeResource = dir + "/timecodes.txt";
+	    File fTimeResource = new File(timeCodeResource); 
+		String videoResource = dir  + Constants.ASSET_NAME;
+        Writer writer = null;
+        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
+        File imgDirect = new File(Constants.PUBLIC + assetId + "/img");
+		int noOfLines = 0;
+		String baseUrl;
+		log.info("Inside generateSkimoFile for " + assetId);
+
+		try 
+		{
+			if(fTimeResource.exists())
+			{
+				noOfLines = LineCounter.count(timeCodeResource);
+			}
+			
+			if(!EngineStatus.isBusy() && imgDirect.exists() && (noOfLines > 3))
+			{
+				List<String> timeCodeList = null;
+				try (Stream<String> lines = Files.lines( Paths.get(timeCodeResource)))
+				{
+					timeCodeList = lines.collect( Collectors.toList() );
+				}
+				catch ( IOException e )
+				{
+					log.error("Threw an exception in Scheduler::generateSkimoFile, full stack trace follows:", e);
+				}
+				timeCodeList.add(0,"0.0");
+	
+				List<Integer> updatedList = new ArrayList<>();
+				String initVal = timeCodeList.get( 0 );
+				if ( initVal == null )
+				{
+					log.warn("Scheduler::generateSkimoFiles initVal is null for assetId " + assetId);
+				}
+				updatedList.add(0);
+				for ( int i = 0; i < timeCodeList.size(); i++ )
+				{ 
+					if ( ( Double.parseDouble( timeCodeList.get( i ) ) - Double.parseDouble( initVal ) ) > 30 )
+					{
+						updatedList.add(i );
+						initVal = timeCodeList.get( i );
+						i = timeCodeList.indexOf( timeCodeList.get( i ) ) - 1;
+					}
+				}
+			    File imgDir = new File(Constants.PUBLIC + assetId + Constants.IMG_DIR);
+				List<String> imgList = FileSorter.sort(imgDir);
+				
+				File videoFile = new File(videoResource);
+				String videoFileName = videoFile.getName();
+				baseUrl = "../" +assetId  + "/";
+				ArrayList<Skimo> skimoList = new ArrayList<>();
+				List<String> finalImgList = imgList;
+				
+				List<String> updatedTimeCodeList =new ArrayList<>(1000);
+	
+				try
+				{
+					for(int  i=0; i < updatedList.size();  i++)
+					{
+						int ix = updatedList.get(i);
+						updatedTimeCodeList.add(timeCodeList.get(ix).toString());
+					}
+				}
+				catch(Exception e)
+				{
+					log.error("Threw an exception in Scheduler::generateSkimoFiles, full stack trace follows:", e);
+				}
+				
+				final ArrayList<String> result = SkimoEngine.getTextFromImage(assetId);
+				IntStream.range(1, updatedTimeCodeList.size() ).forEach( i -> {
+					double v = Double.parseDouble( updatedTimeCodeList.get( i ) );
+					int videoTime = ( int ) v;
+					log.info("text is " + result.get(i));
+					skimoList.add( new Skimo( baseUrl.concat( videoFileName ).concat( "#t=" + videoTime ),videoTime,result.get(i+1)) );
+				} );
+	
+				Skimo  first_item =  new Skimo(baseUrl.concat( videoFileName ).concat( "#t=" + "0" ) ,0, result.get(0));
+				
+			    Context context = new Context();
+			    context.setVariable("first_item", first_item);
+			    context.setVariable("mediaList", skimoList);
+	
+	
+		    	Scheduler s = new Scheduler();
+		    	s.cleanupDir(Constants.PUBLIC + assetId + Constants.IMG_DIR);
+		    	File file = new File(Constants.PUBLIC + assetId + Constants.TIME_CODE_FILE);
+		    	file.delete();
+		        String[] skimoFiles = {Constants.PUBLIC + assetId};
+		        String zipFile = "upload-dir/" + assetId + ".zip";
+		        Zipper zipUtil = new Zipper();
+		    	try 
+		    	{
+		    		writer = new FileWriter(Constants.PUBLIC + assetId + "/skimo.html");
+		    		writer.write(ThymeLeafConfig.getTemplateEngine().process("skimo.html", context));
+		    		writer.close();
+		            zipUtil.zip(skimoFiles, zipFile);
+		    	} 
+		    	catch (Exception e) 
+		    	{
+					log.error("Threw an exception in Scheduler::generateSkimoFiles, full stack trace follows:", e);
+		    	}
+			}
+
+		} 
+		catch (Exception e) 
+		{
+			log.error("Threw an exception in Scheduler::generateSkimoFiles, full stack trace follows:", e);
+		}
+	}
+
 	
 	public  void cleanupDir(String name) 
 	{
