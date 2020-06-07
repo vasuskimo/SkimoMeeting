@@ -35,7 +35,7 @@ public class Scheduler
 	private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
 
 	
-	@Scheduled(fixedDelay = Constants.SKIMO_JOB_FREQUENCY_IN_SECONDS)
+	@Scheduled(fixedDelay = Constants.SKIMO_JOB_EVERY_MINUTE)
 	public void executeSkimoJobs() 
 	{
 		try 
@@ -84,7 +84,7 @@ public class Scheduler
 		}
 	}
 	
-	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
+	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_EVERY_DAY)
 	public void cleanupUploadDirectory() 
 	{
 		File dir = new File(Constants.UPLOAD_DIR);
@@ -94,7 +94,7 @@ public class Scheduler
 		deleteFiles(dir);
 	}
 
-	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_FREQUENCY_IN_SECONDS)
+	@Scheduled(fixedDelay = Constants.CLEANUP_TASK_EVERY_DAY)
 	public void cleanupAssetDirectories() 
 	{
 		File[] files = new File(Constants.PUBLIC).listFiles(File::isDirectory);
