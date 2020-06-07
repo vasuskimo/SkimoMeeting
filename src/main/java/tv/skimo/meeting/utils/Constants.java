@@ -2,8 +2,8 @@ package tv.skimo.meeting.utils;
 
 public class Constants 
 {
-	public static final int SKIMO_JOB_FREQUENCY_IN_SECONDS = 60000;
-	public static final int CLEANUP_TASK_FREQUENCY_IN_SECONDS = 86400000;
+	public static final int SKIMO_JOB_EVERY_MINUTE = 60000;
+	public static final int CLEANUP_TASK_EVERY_DAY = 86400000;
 	public static final int DAILY = 1;
 	public static final int WEEKLY = 7;
 	public static final String PUBLIC = "public/";
@@ -19,5 +19,6 @@ public class Constants
 	public static final String JS_DIR = "/js/";
 	public static final String CSS_DIR = "/css/";
 	public static final String UPLOAD_DIR = "./upload-dir/";
+	public static final String BASIC_DIR = "./upload-dir/basic";
 	public static final String TESS_DATA = "/usr/share/tesseract-ocr/4.00/tessdata";
 }
