@@ -68,6 +68,8 @@ public class Scheduler
 							SkimoEngine.generatePoster(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
 							SkimoEngine.generateThumbnails(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+							SkimoEngine.generateSRT(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+							SkimoEngine.generateSub(assetId);
 						}
 				        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
 					    if(!indexFile.exists())
