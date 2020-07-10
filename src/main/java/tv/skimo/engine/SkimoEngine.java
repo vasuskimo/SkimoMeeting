@@ -112,11 +112,6 @@ public class SkimoEngine
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
             Thread.sleep(10000);
-    		SRTParser s = new SRTParser();
-    		String srtFile = System.getProperty(Constants.USER_DIR) + "/" + Constants.PUBLIC + assetId + "/" + assetId + ".srt";
-    		String subFile = System.getProperty(Constants.USER_DIR) + "/" + Constants.PUBLIC + assetId + "/" + assetId + ".sub";
-    		HashMap<String, String> hMap = s.process(srtFile);
-    		s.writeToFile(hMap,subFile);
         } 
         catch (Exception e) 
         {
@@ -128,7 +123,7 @@ public class SkimoEngine
 	{
 		SRTParser s = new SRTParser();
 		String srtFile = System.getProperty(Constants.USER_DIR) + "/" + Constants.PUBLIC + assetId + "/" + assetId + ".srt";
-		String subFile = System.getProperty(Constants.USER_DIR) + "/" + Constants.PUBLIC + assetId + "/" + assetId + ".sub";
+		String subFile = System.getProperty(Constants.USER_DIR) + "/" + Constants.PUBLIC + assetId + "/" + "subtitles.sub";
 		HashMap<String, String> hMap = s.process(srtFile);
 		s.writeToFile(hMap,subFile);
 	}
