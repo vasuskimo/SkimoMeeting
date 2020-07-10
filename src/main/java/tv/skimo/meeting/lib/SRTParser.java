@@ -47,22 +47,25 @@ public class SRTParser
 	        Scanner myReader = new Scanner(myObj);
 	        String key = "";
 	        String value = "";
+	        int line = 0;
 	        while (myReader.hasNextLine()) 
 	        {
+	          line++;
 	          String data = myReader.nextLine();
 	          if(isTimestamp(data))
 	          {
 	      		 key = (data.substring(0, data.indexOf("-"))).split(",")[0];
+	      		 if(line > 1)
+	      		 {
+	      			hMap.put(key.trim(), value.trim());
+	      		 	value = "";
+	      		 }
+	      			 
 	          }
 	          else if(!isInteger(data))
 	          {
 	        	  data = data.replaceAll("\\<.*?\\>", "");
 	        	  value+= " " + data;
-	        	  if(data.contains("."))
-	        	  {
-	        		  hMap.put(key.trim(), value.trim());
-	        		  value = "";
-	        	  }
 	          }
 	        }
 	        for (String i : hMap.keySet())
@@ -111,8 +114,8 @@ public class SRTParser
 	public static void main(String[] args) 
 	{
 		SRTParser s = new SRTParser();
-		HashMap<String, String> hMap = s.process("subs.srt");
-		s.writeToFile(hMap,"output.sub");
+		HashMap<String, String> hMap = s.process("/Users/vasusrinivasan/Development/SkimoMeeting/public/7e96291c/7e96291c.srt");
+		s.writeToFile(hMap,"/Users/vasusrinivasan/Development/SkimoMeeting/public/7e96291c/7e96291c.sub");
 	}
 
 }
