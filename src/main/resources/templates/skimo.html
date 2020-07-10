@@ -160,6 +160,101 @@ function updateURL(){
 		// No Need to renavigate
 	}
 }
+var subTitleMap;
+function convertSubFileToPairs(filePath) {
+	var rawFile = new XMLHttpRequest();
+	rawFile.open("GET", filePath, false);
+	rawFile.onreadystatechange = function ()
+	{
+	    if(rawFile.readyState === 4)
+	    {
+	        if(rawFile.status === 200 || rawFile.status == 0)
+	        {
+	            var fileText = rawFile.responseText;
+	            // split into lines
+	            var lines = fileText.split("\n");
+	            // Split lines into time,text pairs
+	            subTitleMap = lines
+	            	// split into an array right after the time
+	            	.map(line => line.split(/(?<=\d\d:\d\d:\d\d):/))
+	            	// convert the array into an object
+	            	.map(pair => {return {"time": pair[0] || "", "text": pair[1] || ""}})
+	            	// Make sure the whole thing is properly sorted
+	            	.sort((a, b) => convertTimeToSeconds(a.time) - convertTimeToSeconds(b.time))
+	        }
+	    }
+
+	}
+	rawFile.send(null);
+}
+window.onload = () => convertSubFileToPairs("subtitles.sub");
+
+function getTimeStampsOfQuery(matcher){
+	// take the subtitle map
+	return subTitleMap
+		// filter out any where the text doesn't match
+		.filter(pair => pair.text.match(matcher))
+		// Then only return the times
+		.map(pair => pair.time);
+}
+
+function convertTimeToSeconds(time){
+	// Time should be hh:mm:ss
+	var nums = time
+		.split(":")
+		.map(str => parseInt(str));
+
+	return nums[0]*3600 + nums[1]*60 + nums[2];
+}
+
+function findSlidesFromTimes(times){
+	// If only one time was given instead of an array
+	if (times.length == undefined){
+		// turn it into an array
+		times = [times];
+	}
+
+	// Convert times to times in seconds
+	var timesInSecs = times.map(convertTimeToSeconds);
+
+	// Get all source times
+	var sourceTimes =
+		// Get the source elements
+		Array.from(document.querySelectorAll('source'))
+		// get their source strings
+		.map(source => source.src)
+		// get the time off of those strings
+		.map(source => source.match(/(?<=#t=).+$/)[0]);
+
+	// Find the slides that contain this time stamp
+	return timesInSecs
+		// find the slide
+		.map(time => {
+			// for each slide
+			for (var i = 0; i < sourceTimes.length; i++){
+				// if the source time is after the time stamp
+				if (sourceTimes[i] > time){
+					// return this index, it's the slide number
+					return i-1;
+				}
+			}
+			// If we couldn't find the time, then it's the last slide
+			return i;
+		});
+}
+
+function removeDuplicates(arr){
+	return  Array.from(new Set(arr));
+}
+
+function getSlidesFromSubtitleQuery(matcher){
+	// get times
+	var times = getTimeStampsOfQuery(matcher);
+	// get slides from times
+	var slides = findSlidesFromTimes(times);
+	// remove duplicates
+	return removeDuplicates(slides);
+}
 
 </script>
 <!-- End Share Link Code -->
@@ -325,6 +420,13 @@ function updateURL(){
 				// Convert objects to just the indexes
 				.map(o => o.index);
 		}
+
+		// Search the subtitles as well
+		var subSlides = getSlidesFromSubtitleQuery(query);
+
+		var combinedSlides = [...subSlides, ...slideSearchResults];
+
+		slideSearchResults = removeDuplicates(combinedSlides)
 	}
 
 	function gotoSearchSlide(){
