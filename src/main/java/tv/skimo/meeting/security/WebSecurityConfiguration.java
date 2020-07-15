@@ -27,6 +27,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
          .authenticated()   
         .and()
         .oauth2Login();
+      http.requiresChannel()
+      .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+      .requiresSecure();
    }
 
 }
