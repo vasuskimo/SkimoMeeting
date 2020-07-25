@@ -1,9 +1,6 @@
 package tv.skimo.engine;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import tv.skimo.meeting.lib.ProcessLauncher;
 import tv.skimo.meeting.lib.SRTParser;
 import tv.skimo.meeting.utils.Constants;
  
@@ -31,19 +29,8 @@ public class SkimoEngine
         String [] command = {cwd + "/scripts/postergenerate.sh", cwd  + Constants.ROOT + asset, assetId, cwd};  
         
 		log.info("generate first " + Arrays.toString(command));
-        
-        ProcessBuilder processBuilder = new ProcessBuilder(command); 
-        processBuilder.directory(new File(System.getProperty(Constants.USER_HOME)));
-        
-        try 
-        {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
-        } 
-        catch (IOException e) 
-        {
-			log.error("Threw an exception in Skimo Engine::generatePoster, full stack trace follows:", e);
-        }
+
+		ProcessLauncher.launch(command, log, "generatePoster");
 	}
 	
 	public static void generateThumbnails(String asset, String assetId)
@@ -54,19 +41,7 @@ public class SkimoEngine
         
 		log.info("generate thumbnail " + Arrays.toString(command));
 
-        
-        ProcessBuilder processBuilder = new ProcessBuilder(command); 
-        processBuilder.directory(new File(System.getProperty(Constants.USER_HOME)));
-        
-        try 
-        {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
-        } 
-        catch (IOException e) 
-        {
-			log.error("Threw an exception in SkimoEngine::generateThumbnail, full stack trace follows:", e);
-        }
+		ProcessLauncher.launch(command, log, "generatePoster");
 	}
 	
 	public static void detectScenes(String asset, String assetId)
@@ -79,20 +54,9 @@ public class SkimoEngine
         
         String [] command = {cwd + "/scripts/scenedetect.sh", cwd + Constants.ROOT + asset, assetId, cwd};
         
-		log.info("generate skimo " + Arrays.toString(command));
+		log.info("Detect Scenes " + Arrays.toString(command));
         
-        ProcessBuilder processBuilder = new ProcessBuilder(command); 
-        processBuilder.directory(new File(System.getProperty(Constants.USER_HOME)));
-        
-        try 
-        {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
-        } 
-        catch (IOException e) 
-        {
-			log.error("Threw an exception in SkimoEngine::Detect Scene, full stack trace follows:", e);
-        }
+		ProcessLauncher.launch(command, log, "detectScenes");
 	}
 	
 	public static void generateSRT(String asset, String assetId)
@@ -103,20 +67,8 @@ public class SkimoEngine
         String [] command = {cwd + "/scripts/subtitlegenerate.sh", cwd + Constants.ROOT + asset, assetId, cwd, srt};
         
 		log.info("generate SRT " + Arrays.toString(command));
-   
-        ProcessBuilder processBuilder = new ProcessBuilder(command); 
-        processBuilder.directory(new File(System.getProperty(Constants.USER_HOME)));
-        
-        try 
-        {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
-            Thread.sleep(10000);
-        } 
-        catch (Exception e) 
-        {
-			log.error("Threw an exception in SkimoEngine::generateSRT, full stack trace follows:", e);
-        }
+		
+		ProcessLauncher.launch(command, log, "generateSRT");
 	}
 	
 	public static void generateSub(String assetId)
@@ -128,7 +80,7 @@ public class SkimoEngine
 		s.writeToFile(hMap,subFile);
 	}
 
-    public static String getOCR(String asset, String tessData)
+    private static String getOCR(String asset, String tessData)
     {
 		   log.info("Getting OCR for " + asset);
 		   File image = new File(asset);
