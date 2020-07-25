@@ -1,16 +1,10 @@
 package tv.skimo.meeting.controller;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -30,23 +24,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.context.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tv.skimo.engine.SkimoEngine;
-import tv.skimo.meeting.background.Scheduler;
-import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
-import tv.skimo.meeting.lib.ThymeLeafConfig;
-import tv.skimo.meeting.model.Skimo;
 import tv.skimo.meeting.services.StorageService;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
-import tv.skimo.meeting.utils.LineCounter;
-import tv.skimo.meeting.utils.Zipper;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 
@@ -56,10 +43,7 @@ public class SkimoMeetingController {
 	private final StorageService storageService;
 	
     private static final Logger log=LoggerFactory.getLogger(SkimoMeetingController.class);
-
-	private String baseUrl;
 	
-
 	@Autowired
 	public SkimoMeetingController(StorageService storageService)
 	{
