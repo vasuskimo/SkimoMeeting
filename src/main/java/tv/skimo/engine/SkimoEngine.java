@@ -41,7 +41,7 @@ public class SkimoEngine
         
 		log.info("generate thumbnail " + Arrays.toString(command));
 
-		ProcessLauncher.launch(command, log, "generatePoster");
+		ProcessLauncher.launch(command, log, "generateThumbnails");
 	}
 	
 	public static void detectScenes(String asset, String assetId)
