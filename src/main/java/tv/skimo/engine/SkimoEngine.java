@@ -1,6 +1,9 @@
 package tv.skimo.engine;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -100,6 +103,19 @@ public class SkimoEngine
 		   int len = result.split(System.getProperty("line.separator")).length;
 		   return result;
     }
+    
+	public static void generateSummary(String assetId)
+	{
+        String cwd = System.getProperty(Constants.USER_DIR);
+        
+        String [] command = {Constants.PYTHON, cwd + Constants.ROOT + Constants.SUMMARIZE_CODE,
+        		cwd + Constants.ROOT + Constants.PUBLIC + assetId + Constants.ROOT + Constants.SUBTITLES,
+        		cwd + Constants.ROOT + Constants.PUBLIC + assetId + Constants.ROOT + Constants.SUMMARY, 
+        		Constants.SUMMARY_PERCENT};
+
+        log.info("generate Summary " + Arrays.toString(command));
+		ProcessLauncher.launch(command, log, "generateSummary");
+	}
 	   
     public static ArrayList<String> getTextFromImage(String assetId) 
 	{
@@ -125,8 +141,9 @@ public class SkimoEngine
     public static void main(String[] args) 
     { 
     	//SkimoEngine.generateFirst("a.mp4",  "8fc4e728");
-    	SkimoEngine.detectScenes("public/8fc4e728/source.mp4", "8fc4e728");
+    	//SkimoEngine.detectScenes("public/8fc4e728/source.mp4", "8fc4e728");
     	//SkimoEngine.generateThumbnail("a.mp4",  "8fc4e728");
     	//SkimoEngine.detectScenes("a.mp4",  "8fc4e728");
+    	SkimoEngine.generateSummary("76e79303");
     } 
 } 
