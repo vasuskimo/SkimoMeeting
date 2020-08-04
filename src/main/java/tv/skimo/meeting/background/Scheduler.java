@@ -70,6 +70,7 @@ public class Scheduler
 							SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SkimoEngine.generateSRT(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
 							SkimoEngine.generateSub(assetId);
+							SkimoEngine.generateSummary(assetId);
 						}
 				        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
 					    if(!indexFile.exists())
