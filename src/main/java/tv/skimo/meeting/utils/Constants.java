@@ -21,7 +21,7 @@ public class Constants
 	public static final String UPLOAD_DIR = "./upload-dir/";
 	public static final String BASIC_DIR = "./upload-dir/basic";
 	public static final String TESS_DATA = "/usr/share/tesseract-ocr/4.00/tessdata";
-	public static final String PYTHON = "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3";
+	public static final String PYTHON = "/usr/bin/python3";
 	public static final String SUMMARIZE_CODE = "scripts/summarize.py";
 	public static final String SUBTITLES = "subtitles.sub";
 	public static final String SUMMARY = "summary.txt";
