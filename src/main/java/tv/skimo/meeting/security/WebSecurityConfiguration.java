@@ -12,7 +12,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
        String[] resources = new String[]{
                "/","/css/**","/js/**","/img/**","favicon.ico","logo.png","favicon.ico",
                "/**/skimo.html","/skimo/**","/about.html", "/**/*.css", 
-               "/**/*.png", "/**/*.js","/**/*.mp4", "/**/skimo.html","**/*.sub",
+               "/**/*.png", "/**/*.js","/**/*.mp4", "/**/skimo.html","/**/*.sub",
                "/copyright.html", "/privacy.html", "/plans.html", "/terms.html","/SkimoLongView.pdf"
        };
 
