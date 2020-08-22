@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -168,5 +169,11 @@ public class SkimoMeetingController {
 		} 
 
 	}
-
+	@GetMapping("/skimo/{assetId}.zip")
+	public ModelAndView getZip( Model model,@PathVariable(name="assetId") String assetId )
+	{
+		log.info("assetid is " + assetId);
+		return new ModelAndView("redirect:" + "/files/" + assetId + ".zip");
+	}
+	
 }
