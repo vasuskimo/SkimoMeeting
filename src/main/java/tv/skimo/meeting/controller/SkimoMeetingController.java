@@ -169,7 +169,7 @@ public class SkimoMeetingController {
 		} 
 
 	}
-	@GetMapping("/skimo/{assetId}.zip")
+	@GetMapping("/zip/{assetId}")
 	public ModelAndView getZip( Model model,@PathVariable(name="assetId") String assetId )
 	{
 		log.info("assetid is " + assetId);
