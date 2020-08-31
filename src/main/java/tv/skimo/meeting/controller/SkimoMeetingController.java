@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,20 +104,31 @@ public class SkimoMeetingController {
 	@PostMapping("/myskimo")
 	@ResponseBody
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
+			@RequestParam("annotation") Optional <MultipartFile>  annotationFile,
 			RedirectAttributes redirectAttributes) 
 	{
 		log.info("Inside My Skimo post method");
-		OAuth2User user = getCurrentUser();
-		String email = (String) user.getAttributes().get("email");
+	//	OAuth2User user = getCurrentUser();
+		//String email = (String) user.getAttributes().get("email");
+		String email = "vasu@skimo.tv";
 	    log.info("email is " + email);
 	      
 		String assetId = "";
 		String accName = "basic/" + email + "/";
+		String annotationFileName = null;
+		log.info(file.getContentType());
+		log.info(String.valueOf(annotationFile.isPresent()));
 		
 		storageService.store(file,accName);
+		if(annotationFile.isPresent())
+		{
+			MultipartFile ann = annotationFile.get();
+			storageService.store(ann,accName);
+			annotationFileName = annotationFile.get().getOriginalFilename();
+		}
 		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR + accName , file.getOriginalFilename());
 
-		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename()))
+		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
 		{
 			try 
 			{
