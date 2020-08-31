@@ -32,13 +32,26 @@ public class AssetUtil
  
 	// This method creates an assetid directory under public directory and
     // copies the asset into the assetId directory as source.mp4
-    public static boolean createAssetDir(String dir, String assetId, String assetName)
+    public static boolean createAssetDir(String dir, String assetId, String assetName, String annotationFileName)
     {
 	    File file = new File(Constants.PUBLIC + assetId);
 	    boolean result = file.mkdir(); 
 	    
         File source = new File(dir + assetName);
         File dest = new File(Constants.PUBLIC + assetId + Constants.ASSET_NAME);
+        if(annotationFileName != null)
+        {
+        	File annotationSource = new File(dir + annotationFileName);
+        	File annotationDest = new File(Constants.PUBLIC + assetId +  "/" + annotationFileName);
+        	try
+        	{
+    			Files.move(annotationSource.toPath(), annotationDest.toPath(),StandardCopyOption.REPLACE_EXISTING);
+        	}
+    		catch (IOException e) 
+    		{
+    			log.error("Threw an exception in AssetUtil::createAssetDir, full stack trace follows:", e);
+    		}
+        }
 		try 
 		{
 			log.info("moving the asset file " + Constants.ASSET_NAME);
