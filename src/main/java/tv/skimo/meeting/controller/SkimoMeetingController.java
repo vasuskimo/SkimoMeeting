@@ -108,9 +108,8 @@ public class SkimoMeetingController {
 			RedirectAttributes redirectAttributes) 
 	{
 		log.info("Inside My Skimo post method");
-	//	OAuth2User user = getCurrentUser();
-		//String email = (String) user.getAttributes().get("email");
-		String email = "vasu@skimo.tv";
+		OAuth2User user = getCurrentUser();
+		String email = (String) user.getAttributes().get("email");
 	    log.info("email is " + email);
 	      
 		String assetId = "";
