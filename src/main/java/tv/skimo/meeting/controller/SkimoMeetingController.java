@@ -198,6 +198,9 @@ public class SkimoMeetingController {
 		log.info("Inside live recording post method");
 	    log.info("email is " + email);
 	    log.info("api key is " + apikey);
+	    
+	    if(!apikey.equalsIgnoreCase("yKLxpeweS42A78"))
+	    	return null;
 	      
 		String accName = "basic/" + email + "/";
 		String annotationFileName = null;
