@@ -127,7 +127,7 @@ public class SkimoMeetingController {
 		}
 		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR + accName , file.getOriginalFilename());
 
-		if(AssetUtil.createAssetDir(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
+		if(AssetUtil.CreateAssetDirAndMoveFiles(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
 		{
 			try 
 			{
@@ -185,6 +185,50 @@ public class SkimoMeetingController {
 	{
 		log.info("assetid is " + assetId);
 		return new ModelAndView("redirect:" + "/files/" + assetId + ".zip");
+	}
+	
+	@PostMapping("/live/recording")
+	@ResponseBody
+	public String UploadLiveRecording(@RequestParam("file") MultipartFile file,
+			@RequestParam(name = "assetid") String assetId,
+			@RequestParam(name = "apikey") String apikey,
+			@RequestParam(name = "username") String email,			
+			RedirectAttributes redirectAttributes) 
+	{
+		log.info("Inside live recording post method");
+	    log.info("email is " + email);
+	    log.info("api key is " + apikey);
+	      
+		String accName = "basic/" + email + "/";
+		String annotationFileName = null;
+		log.info(file.getContentType());
+		storageService.store(file,accName);
+
+		if(AssetUtil.CreateAssetDirAndMoveFiles(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
+		{
+			try 
+			{
+				if(EngineStatus.isBusy())
+				{
+					log.info("Engine is busy");
+				}
+				else
+				{
+					SkimoEngine.generatePoster(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);	
+					SkimoEngine.generateThumbnails(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SkimoEngine.detectScenes(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+				}
+			} 
+			catch (IOException e) 
+			{
+				log.error("Threw an exception in SkimoMeetingController::handleFileUpload, full stack trace follows:", e);
+			}
+			String retVal = "skimo/" + assetId;
+			
+			return(retVal);			
+		}
+		String retVal = "skimo/" + assetId;
+		return(retVal);			
 	}
 	
 }
