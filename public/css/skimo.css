@@ -1,0 +1,100 @@
+h1 
+{
+   font-weight: 200;
+   margin: 0.4em 0;
+   font-size: 3.5em; 
+}
+
+#searchModal
+{
+   position: fixed;
+   right: 0;
+   top: 0;
+   transition: transform 0.5s;
+   padding: 5px 2px 5px 1em;
+   background: white;
+   z-index: 99999;
+   border-radius: 5px;
+   border: 1px solid;
+   margin-right: 1em;
+   box-shadow: 2px 2px 5px gray;
+}
+
+#searchBarWrapper 
+{
+   display: grid;
+   grid-template-columns: auto 3em 2em 2em;
+   height: 2em;
+}
+
+#searchBar 
+{
+   width: 7em;
+   border: none;
+}
+
+#searchBar:focus 
+{
+   outline: none;
+}
+
+#searchBar::placeholder 
+{
+   color: lightgrey;
+}
+
+.searchNavigation 
+{
+   width: 2em;
+   position: relative;
+   cursor: pointer;
+   overflow: hidden;
+}
+
+.searchArrow 
+{
+   transform: translate(40%, 44%);
+   height: 100%;
+   width: 100%;
+}
+.searchArrow:before, .searchArrow:after 
+{
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 0.5em;
+   height: 2px;
+   border-radius: 1px;
+   background-color: gray;
+   transition: all 0.15s ease, background-color 0.8s ease;
+   -webkit-transform-origin: 2px 2px;
+   transform-origin: 0.5px;
+   will-change: transform;
+}
+.searchArrow:before 
+{
+   transform: rotate(45deg);
+}
+.searchArrow:after 
+{
+   transform: rotate(-45deg);
+}
+
+#moveSearchForward 
+{
+   transform: rotate(-90deg);
+   border-bottom: solid 1px lightgray;
+}
+
+#moveSearchBack 
+{
+   transform: rotate(90deg);
+}
+
+#searchSlideNumber 
+{
+   padding: 5px;
+   border-right: solid 1px lightgray;
+}
+
