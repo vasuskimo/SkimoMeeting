@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -186,10 +187,11 @@ public class SkimoMeetingController {
 		log.info("assetid is " + assetId);
 		return new ModelAndView("redirect:" + "/files/" + assetId + ".zip");
 	}
-	
+			
 	@PostMapping("/live/recording")
 	@ResponseBody
-	public String UploadLiveRecording(@RequestParam("file") MultipartFile file,
+	public  ResponseEntity<?> UploadLiveRecording(@RequestParam("file") MultipartFile file,
+			@RequestParam("annotation") Optional <MultipartFile>  annotationFile,
 			@RequestParam(name = "assetid") String assetId,
 			@RequestParam(name = "apikey") String apikey,
 			@RequestParam(name = "username") String email,			
@@ -206,6 +208,15 @@ public class SkimoMeetingController {
 		String annotationFileName = null;
 		log.info(file.getContentType());
 		storageService.store(file,accName);
+		
+		log.info(String.valueOf(annotationFile.isPresent()));
+		
+		if(annotationFile.isPresent())
+		{
+			MultipartFile ann = annotationFile.get();
+			storageService.store(ann,accName);
+			annotationFileName = annotationFile.get().getOriginalFilename();
+		}
 
 		if(AssetUtil.CreateAssetDirAndMoveFiles(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
 		{
@@ -221,17 +232,15 @@ public class SkimoMeetingController {
 					SkimoEngine.generateThumbnails(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 					SkimoEngine.detectScenes(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
 				}
+				return new ResponseEntity<>("Success", HttpStatus.OK);
 			} 
 			catch (IOException e) 
 			{
 				log.error("Threw an exception in SkimoMeetingController::handleFileUpload, full stack trace follows:", e);
+				return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			String retVal = "skimo/" + assetId;
-			
-			return(retVal);			
 		}
-		String retVal = "skimo/" + assetId;
-		return(retVal);			
+		return new ResponseEntity<>("Asset already exists", HttpStatus.OK);
 	}
 	
 }
