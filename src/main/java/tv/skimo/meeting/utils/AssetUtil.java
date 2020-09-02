@@ -93,6 +93,9 @@ public class AssetUtil
         File sourceMainMinCSS = new File("public/css/main.min.css");
         File destMainMinCSS = new File(Constants.PUBLIC + assetId + "/css/main.min.css");
         
+        File sourceSkimoCSS = new File("public/css/skimo.css");
+        File destSkimoCSS = new File(Constants.PUBLIC + assetId + "/css/skimo.css");
+        
         File sourceLogo = new File("public/img/skimologo.png");
         File destLogo = new File(Constants.PUBLIC + assetId + "/skimologo.png");
         
@@ -109,6 +112,7 @@ public class AssetUtil
 			Files.copy(sourceScreenCSS.toPath(), destScreenCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceRevealCSS.toPath(), destRevealCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceMainMinCSS.toPath(), destMainMinCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceSkimoCSS.toPath(), destSkimoCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceHLogo.toPath(), destHLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
