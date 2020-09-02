@@ -89,6 +89,7 @@ function updateURL(){
 	}
 }
 var subTitleMap;
+var noteMap;
 function convertSubFileToPairs(filePath) {
 	var rawFile = new XMLHttpRequest();
 	rawFile.open("GET", filePath, false);
@@ -114,8 +115,43 @@ function convertSubFileToPairs(filePath) {
 
 	}
 	rawFile.send(null);
+	console.log(subTitleMap);
 }
-window.onload = () => convertSubFileToPairs("subtitles.sub");
+
+function convertAnnotationFileToPairs(filePath) {
+	var rawFile = new XMLHttpRequest();
+	rawFile.open("GET", filePath, false);
+	rawFile.onreadystatechange = function ()
+	{
+	    if(rawFile.readyState === 4)
+	    {
+	        if(rawFile.status === 200 || rawFile.status == 0)
+	        {
+	            var fileText = rawFile.responseText;
+	            // split into lines
+	            var lines = fileText.split("\n");
+	            // Split lines into time,text pairs
+	            noteMap = lines
+	            	// split into an array right after the time
+	            	.map(line => line.split(/(?<=\d\d:\d\d:\d\d):/))
+	            	// convert the array into an object
+	            	.map(pair => {return {"time": pair[0] || "", "text": pair[1] || ""}})
+	            	// Make sure the whole thing is properly sorted
+	            	.sort((a, b) => convertTimeToSeconds(a.time) - convertTimeToSeconds(b.time))
+	        }
+	    }
+
+	}
+	rawFile.send(null);
+	console.log(noteMap);
+}
+function start() 
+{
+	convertSubFileToPairs("subtitles.sub");
+	convertAnnotationFileToPairs("annotations.txt");
+}
+// window.onload = () => convertSubFileToPairs("subtitles.sub");
+window.onload = start;
 
 function getTimeStampsOfQuery(matcher){
 	// take the subtitle map
