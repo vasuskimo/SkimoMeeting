@@ -2,9 +2,15 @@ package tv.skimo.meeting.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +43,7 @@ import tv.skimo.meeting.lib.StorageFileNotFoundException;
 import tv.skimo.meeting.services.StorageService;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
+import tv.skimo.meeting.utils.Email;
 import tv.skimo.meeting.utils.EngineStatus;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
@@ -194,15 +201,14 @@ public class SkimoMeetingController {
 			@RequestParam("annotation") Optional <MultipartFile>  annotationFile,
 			@RequestParam(name = "assetid") String assetId,
 			@RequestParam(name = "apikey") String apikey,
-			@RequestParam(name = "username") String email,			
-			RedirectAttributes redirectAttributes) 
+			@RequestParam(name = "username") String email) 
 	{
 		log.info("Inside live recording post method");
 	    log.info("email is " + email);
 	    log.info("api key is " + apikey);
 	    
 	    if(!apikey.equalsIgnoreCase("yKLxpeweS42A78"))
-	    	return null;
+			return new ResponseEntity<>("Incorrect API Key", HttpStatus.FORBIDDEN);
 	      
 		String accName = "basic/" + email + "/";
 		String annotationFileName = null;
@@ -241,6 +247,45 @@ public class SkimoMeetingController {
 			}
 		}
 		return new ResponseEntity<>("Asset already exists", HttpStatus.OK);
+	}
+	
+	@GetMapping("/user")
+	@ResponseBody
+	public ResponseEntity<?> getOTP(@RequestParam(name = "apikey") String apikey,
+			@RequestParam(name = "username") String email) 
+	{ 
+		log.info("Inside user GET method");
+	    log.info("email is " + email);
+	    log.info("api key is " + apikey);
+	    
+	    if(!apikey.equalsIgnoreCase("yKLxpeweS42A78"))
+			return new ResponseEntity<>("Incorrect API Key", HttpStatus.FORBIDDEN);
+
+		int leftLimit = 48; // numeral '0'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 10;
+	    Random random = new Random();
+	 
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+	      .limit(targetStringLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+	    MessageDigest md = null;
+		try 
+		{
+			md = MessageDigest.getInstance("SHA-256");
+		} 
+		catch (NoSuchAlgorithmException e) 
+		{
+			return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}  
+	    Email.send("vasusrini@yahoo.com", generatedString);
+        byte[] digest= md.digest(generatedString.getBytes(StandardCharsets.UTF_8));
+        String retVal = String.format("%064x", new BigInteger(1, digest));
+        log.info(retVal);
+        return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 	
 }
