@@ -36,15 +36,15 @@ public class Email {
 	      {
 	         MimeMessage message = new MimeMessage(session);
 
-	         message.setFrom(new InternetAddress(from));
-
+	         message.setFrom(new InternetAddress(from, "No Reply"));
+	    	 message.setReplyTo(InternetAddress.parse("noreply@gmail.com", false));
 	         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-	         message.setSubject("One time passcode ");
+	         message.setSubject("One time passcode for registering Skimo Smart Meeting Recorder");
 	         message.setText("Here is the one time passcode " + text);
 	         Transport.send(message);
 	      } 
-	      catch (MessagingException mex) 
+	      catch (Exception mex) 
 	      {
 	    	  mex.printStackTrace();
 	    	  return false;
