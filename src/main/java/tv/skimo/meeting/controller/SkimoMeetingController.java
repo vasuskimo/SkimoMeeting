@@ -281,7 +281,7 @@ public class SkimoMeetingController {
 			return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}  
-	    Email.send("vasusrini@yahoo.com", generatedString);
+	    Email.send(email, generatedString);
         byte[] digest= md.digest(generatedString.getBytes(StandardCharsets.UTF_8));
         String retVal = String.format("%064x", new BigInteger(1, digest));
         log.info(retVal);
