@@ -28,8 +28,11 @@ public class AnnotationAPI
     }
 
     @PostMapping("/live/annotations")
-    public ResponseEntity<Annotation> create(@RequestBody Annotation annotation) 
+    public ResponseEntity<?> create(@RequestBody Annotation annotation,
+			@RequestParam(name = "apikey") String apikey) 
     {
+	    if(!apikey.equalsIgnoreCase("yKLxpeweS42A78"))
+	    	return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect API Key");
     	return ResponseEntity.status(HttpStatus.CREATED).body(annotationService.save(annotation));
     }
 
