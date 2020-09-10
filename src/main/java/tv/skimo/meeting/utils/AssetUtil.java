@@ -81,8 +81,8 @@ public class AssetUtil
         File sourceRevealJS = new File("public/js/reveal.js");
         File destRevealJS = new File(Constants.PUBLIC + assetId + "/js/reveal.js");
 
-        File sourceIndexJS = new File("public/js/video-player.js");
-        File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/video-player.js");
+        File sourceVideoPlayerJS = new File("public/js/video-player.js");
+        File destVideoPlayerJS = new File(Constants.PUBLIC + assetId + "/js/video-player.js");
         
         File sourceSkimoJS = new File("public/js/skimo.js");
         File destSkimoJS = new File(Constants.PUBLIC + assetId + "/js/skimo.js");
@@ -117,7 +117,7 @@ public class AssetUtil
 			Files.copy(sourceMainMinCSS.toPath(), destMainMinCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceSkimoCSS.toPath(), destSkimoCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceSkimoJS.toPath(), destSkimoJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
-			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceVideoPlayerJS.toPath(), destVideoPlayerJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceHLogo.toPath(), destHLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceFavIcon.toPath(), destFavIcon.toPath(),StandardCopyOption.REPLACE_EXISTING);
