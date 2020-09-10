@@ -97,4 +97,18 @@ h1
    padding: 5px;
    border-right: solid 1px lightgray;
 }
+.logo-hide {
+   width:100px !important;height:100px !important;
+}
+
+#editable-textarea {
+   border: 1px solid #ccc;
+    padding: 5px;
+    position: absolute;
+    top: 600px;
+    overflow-y: scroll;
+    height: 100px;
+    width: 30%;
+    left: 450px;
+}
 
