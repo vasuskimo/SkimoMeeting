@@ -84,6 +84,9 @@ public class AssetUtil
         File sourceIndexJS = new File("public/js/video-player.js");
         File destIndexJS = new File(Constants.PUBLIC + assetId + "/js/video-player.js");
         
+        File sourceSkimoJS = new File("public/js/skimo.js");
+        File destSkimoJS = new File(Constants.PUBLIC + assetId + "/js/skimo.js");
+        
         File sourceScreenCSS = new File("public/css/screen.css");
         File destScreenCSS = new File(Constants.PUBLIC + assetId + "/css/screen.css");
         
@@ -113,6 +116,7 @@ public class AssetUtil
 			Files.copy(sourceRevealCSS.toPath(), destRevealCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceMainMinCSS.toPath(), destMainMinCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceSkimoCSS.toPath(), destSkimoCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceSkimoJS.toPath(), destSkimoJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceIndexJS.toPath(), destIndexJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceHLogo.toPath(), destHLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
