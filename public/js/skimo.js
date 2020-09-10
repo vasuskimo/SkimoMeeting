@@ -98,7 +98,7 @@ function convertAnnotationFileToPairs(filePath) {
 	var html = '';
 	for (var i = 0; i < noteMap.length ; i++) {
 
-		 html +=  '<p class="link" onclick="link(this)" link="source.mp4#t='+toSecs(noteMap[i].time)+'" >'+noteMap[i].time+' '+noteMap[i].text+'</p>';
+		 html +=  '<p class="link" style="text-decoration: underline" onclick="link(this)" link="source.mp4#t='+toSecs(noteMap[i].time)+'" >'+noteMap[i].time+' '+noteMap[i].text+'</p>';
 	}
 	document.getElementById('notes').innerHTML = html;
 
@@ -107,7 +107,7 @@ function convertAnnotationFileToPairs(filePath) {
 function toSecs(hms){
 	var a = hms.split(':'); // split it at the colons
 	// minutes are worth 60 seconds. Hours are worth 60 minutes.
-	return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]); 
+	return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
 
 }
 
