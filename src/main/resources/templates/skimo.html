@@ -1,82 +1,78 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-     <link rel="shortcut icon" href="favicon.ico" />
-     <link rel="stylesheet" href="css/screen.css" media="screen">
-    <title>Skimo</title>
-    <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/skimo.css">
 
+<head>
+   <meta charset="utf-8">
+   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+   <link rel="shortcut icon" href="favicon.ico" />
+   <link rel="stylesheet" href="css/screen.css" media="screen">
+   <title>Skimo</title>
+   <link rel="stylesheet" href="css/reveal.css">
+   <link rel="stylesheet" href="css/main.min.css">
+   <link rel="stylesheet" href="css/skimo.css">
 </head>
+
 <body>
 
-  <header class="banner navbar navbar-default navbar-fixed-top" role="banner">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/"><img src="logo.png" alt="Skimo"></a>
-    </div>
+   <header class="banner navbar navbar-default navbar-fixed-top" role="banner">
+      <div class="container">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+            </button>
+               <a class="navbar-brand" href="/"><img src="logo.png" alt="Skimo"></a>
+            </div>
+         </div>
+   </header>
 
-  </div>
-</header>
-
-  <div class="reveal">
-
-    <div class="slides">
-
-    <section>
-    <div id="video-container">
-       <video id="player" preload controls>
-         <source th:attr="src=@{${first_item.videoUrl}}" type="video/mp4">
-       </video>
-       <input name="text" type="hidden" th:value="${first_item.text}" />
-       <center><h1>0:00</h1></center>
-       <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;" alt="">
+   <div class="reveal">
+      <div class="slides">
+         <section>
+            <div id="video-container">
+               <video id="player" preload controls>
+                  <source th:attr="src=@{${first_item.videoUrl}}" type="video/mp4">
+               </video>
+               <input name="text" type="hidden" th:value="${first_item.text}" />
+               <center><h1>0:00</h1></center>
+               <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;" alt="">
+            </div>
+         </section>
+    
+         <section   th:each="media: ${mediaList}">
+	        <div id="video-container">
+	           <video id="player" preload controls>
+	              <source th:attr="src=@{${media.videoUrl}}" type="video/mp4">
+	           </video>
+	           <input name="text" type="hidden" th:value="${media.text}" />
+	           <center><h1 th:text=${media.currentTime}></h1></center>
+	           <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;" alt="">
+	        </div>
+         </section>
       </div>
-    </section>
-    
-    <section   th:each="media: ${mediaList}">
-	    <div id="video-container">
-	       <video id="player" preload controls>
-	         <source th:attr="src=@{${media.videoUrl}}" type="video/mp4">
-	       </video>
-	       <input name="text" type="hidden" th:value="${media.text}" />
-	       <center><h1 th:text=${media.currentTime}></h1></center>
-	       <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;" alt="">
-	    </div>
-    </section>
-    
-    </div>
-
-  </div>
-  <div id="editable-textarea"  contenteditable="true" >
-    <h4> Notes</h4>
-    <div id="notes"></div>
-  </div>
+   </div>
   
-<script src="js/reveal.js"></script>
-<script src="js/video-player.js"></script>
+   <div id="editable-textarea"  contenteditable="true" >
+      <h4> Notes</h4>
+      <div id="notes"></div>
+   </div>
+  
+   <script src="js/reveal.js"></script>
+   <script src="js/video-player.js"></script>
 
-
-
-
-<div id="searchModal" class="slideIn">
-	<div id="searchBarWrapper">
-		<input type="text" id="searchBar" placeholder="search" />
-		<span id="searchSlideNumber">0/0</span>
-		<div id="moveSearchBack" class="searchNavigation"><div class="searchArrow"></div></div>
-		<div id="moveSearchForward" class="searchNavigation"><div class="searchArrow"></div></div>
-	</div>
-</div>
-<script src="js/skimo.js"></script>
-
+   <div id="searchModal" class="slideIn">
+      <div id="searchBarWrapper">
+         <input type="text" id="searchBar" placeholder="search" />
+		 <span id="searchSlideNumber">0/0</span>
+		 <div id="moveSearchBack" class="searchNavigation"><div class="searchArrow"></div></div>
+		 <div id="moveSearchForward" class="searchNavigation"><div class="searchArrow"></div></div>
+      </div>
+   </div>
+   
+   <script src="js/skimo.js"></script>
+   
 </body>
+
 </html>
