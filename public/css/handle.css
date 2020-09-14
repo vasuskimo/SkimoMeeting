@@ -1,0 +1,136 @@
+/* Style the tab */
+.tab {
+  display: flex;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  margin: 0px 5px;
+  font-size: 17px;
+  background-color: #fff;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  border-bottom: 2px solid gray;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  border-bottom: 2px solid darkblue;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-top: none;
+  text-align: left;
+  max-height: 100px;
+  height: auto;
+  overflow-y: scroll;
+}
+
+hr {
+  padding: 0px 0px !important;
+  margin: 0px 0px !important;
+}
+
+.tabcontent p {
+  cursor: pointer !important;
+  font-family: serif;
+  font-size: 14px;
+  padding-left: 5px;
+}
+
+.tabcontent span {
+  margin-right: 10px;
+  color: darkblue;
+}
+
+.social-media {
+  display: flex;
+}
+
+.social-media a {
+  text-decoration: none;
+  font-size: 12px;
+  margin: 0px 15px;
+  color: gray;
+}
+.social-media a i {
+  padding: 0px 2px;
+  margin: 0px 4px;
+  font-size: 10px;
+  color: gray;
+}
+
+#note {
+  font-family: Lato, "Noto Sans", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.circle {
+  background: darkblue;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  visibility: hidden;
+}
+
+#getid {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* .s-position {
+  padding-top: 10px !important;
+} */
+
+.Order1 {
+  position: relative;
+  display: flex;
+  justify-content: end;
+}
+
+.Order1 i {
+  position: absolute;
+  touch-action: auto;
+  cursor: pointer;
+  color: rgb(155, 111, 111);
+  font-size: 27px;
+  margin-right: 5px;
+  top: 0;
+  right: 0;
+}
+
+.Order2 {
+  position: relative;
+  display: flex;
+  justify-content: end;
+}
+
+.Order2 i {
+  position: absolute;
+  touch-action: auto;
+  cursor: pointer;
+  color: rgb(155, 111, 111);
+  font-size: 27px;
+  margin-right: 5px;
+  top: 0;
+  right: 0;
+}
+#currentVideoTime{
+  color: gray;
+  font-weight: bold;
+}
