@@ -10,6 +10,8 @@
    <link rel="stylesheet" href="css/reveal.css">
    <link rel="stylesheet" href="css/main.min.css">
    <link rel="stylesheet" href="css/skimo.css">
+   <link rel="stylesheet" href="css/handle.css">
+   <link href="https://fonts.googleapis.com/css?family=Raleway:200,100,400" rel="stylesheet" type='text/css'>
 </head>
 
 <body>
@@ -36,8 +38,26 @@
                   <source th:attr="src=@{${first_item.videoUrl}}" type="video/mp4">
                </video>
                <input name="text" type="hidden" th:value="${first_item.text}" />
-               <center><h1>0:00</h1></center>
-               <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;" alt="">
+               <center><h1 id="currentVideoTime">0:00</h1></center>
+               <img id="starter" class="hide" src="skimologo.png" style="width:100px;height:100px;top: 42%;" alt="">
+               
+               
+               <div class="tab">
+                  <button class="tablinks" onclick="openCity(event, 'note')" id="defaultOpen">Transcript</button>
+                  <button class="tablinks" onclick="openCity(event, 'transcript')">Notes</button>
+               </div>
+
+               <hr>
+               <div id="note" class="tabcontent">
+                  <div class="Order1">
+                     <i class="fas fa-sort" onclick="subtitleAscending()"></i>
+                  </div>
+               </div>
+
+               <div id="transcript" class="tabcontent ">
+                  <div class="Order2">
+                     <i class="fas fa-sort" onclick="transcriptAscending()"></i>
+               </div>
             </div>
          </section>
     
@@ -54,13 +74,11 @@
       </div>
    </div>
   
-   <div id="editable-textarea"  contenteditable="true" >
-      <h4> Notes</h4>
-      <div id="notes"></div>
-   </div>
+
   
    <script src="js/reveal.js"></script>
    <script src="js/video-player.js"></script>
+   <script src="js/handle.js"></script>
 
    <div id="searchModal" class="slideIn">
       <div id="searchBarWrapper">
