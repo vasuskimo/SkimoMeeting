@@ -87,6 +87,9 @@ public class AssetUtil
         File sourceSkimoJS = new File("public/js/skimo.js");
         File destSkimoJS = new File(Constants.PUBLIC + assetId + "/js/skimo.js");
         
+        File sourceHandleJS = new File("public/js/handle.js");
+        File destHandleJS = new File(Constants.PUBLIC + assetId + "/js/handle.js");
+        
         File sourceScreenCSS = new File("public/css/screen.css");
         File destScreenCSS = new File(Constants.PUBLIC + assetId + "/css/screen.css");
         
@@ -98,6 +101,9 @@ public class AssetUtil
         
         File sourceSkimoCSS = new File("public/css/skimo.css");
         File destSkimoCSS = new File(Constants.PUBLIC + assetId + "/css/skimo.css");
+        
+        File sourceHandleCSS = new File("public/css/handle.css");
+        File destHandleCSS = new File(Constants.PUBLIC + assetId + "/css/handle.css");
         
         File sourceLogo = new File("public/img/skimologo.png");
         File destLogo = new File(Constants.PUBLIC + assetId + "/skimologo.png");
@@ -116,8 +122,10 @@ public class AssetUtil
 			Files.copy(sourceRevealCSS.toPath(), destRevealCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceMainMinCSS.toPath(), destMainMinCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceSkimoCSS.toPath(), destSkimoCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceHandleCSS.toPath(), destHandleCSS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceSkimoJS.toPath(), destSkimoJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceVideoPlayerJS.toPath(), destVideoPlayerJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(sourceHandleJS.toPath(), destHandleJS.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceLogo.toPath(), destLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceHLogo.toPath(), destHLogo.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			Files.copy(sourceFavIcon.toPath(), destFavIcon.toPath(),StandardCopyOption.REPLACE_EXISTING);
