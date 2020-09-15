@@ -26,8 +26,8 @@ function openCity(evt, cTabContent) {
 document.getElementById("defaultOpen").click();
 
 
-let noteFile = [];
-let subTitleFile = [];
+let objNote = [];
+let objSubtitle = [];
 
 //load subtitles.txt 
 function subtitleFile() {
@@ -39,14 +39,23 @@ function subtitleFile() {
         .then((data) => {
             var lines = data.split('\n');
             for (var i = 0; i < lines.length - 1; i++) {
-                subTitleFile.push(lines[i]);
                 // split Time
                 var dPosition = lines[i].lastIndexOf(":");
                 var time = lines[i].substring(0, dPosition);
                 // Split Text
                 var text = lines[i].substring(lines[i].lastIndexOf(':') + 1);
-                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${time}</span>${text}</p>`);
+
+                var customObj = {
+                    te: text,
+                    ti: time,
+                };
+                objSubtitle.push(customObj);
             }
+            objSubtitle.sort((a, b) => a.ti.localeCompare(b.ti));
+            for (var i = 0; i < objSubtitle.length; i++) {
+                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objSubtitle[i].ti}</span>${objSubtitle[i].te}</p>`);
+            }
+
         })
         .catch((error) => {
             console.log(error);
@@ -64,13 +73,20 @@ function annotationsTextFile() {
         .then((data) => {
             var lines = data.split('\n');
             for (var i = 0; i < lines.length - 1; i++) {
-                noteFile.push(lines[i]);
                 // split Time
                 var dPosition = lines[i].lastIndexOf(":");
                 var time = lines[i].substring(0, dPosition);
                 // Split Text
                 var text = lines[i].substring(lines[i].lastIndexOf(':') + 1);
-                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${time}</span>${text}</p>`);
+                var customObj = {
+                    te: text,
+                    ti: time,
+                };
+                objNote.push(customObj);
+            }
+            objNote.sort((a, b) => a.ti.localeCompare(b.ti));
+            for (var i = 0; i < objNote.length; i++) {
+                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objNote[i].ti}</span>${objNote[i].te}</p>`);
             }
         })
         .catch((error) => {
@@ -93,7 +109,9 @@ document.addEventListener('click', function (event) {
     hiddenCircle();
     if (event.target.matches('#getid')) {
         event.preventDefault();
-        let currentTime = event.target.querySelector('span').innerText;
+        if (event.target.closest('p')) {
+            var currentTime = event.target.querySelector('span').innerText;
+        }
 
         let circle = event.target.querySelector('i');
         circle.style.visibility = "visible";
@@ -137,51 +155,54 @@ function hiddenCircle() {
 
 
 
+// objSubtitle
+var isSub = true;
+function subtitleSort() {
+    var content1 = document.querySelector('#note');
+    content1.innerHTML = '';
+    content1.insertAdjacentHTML('afterbegin', `<div class="Order1"> <i class="fas fa-sort" onclick="subtitleSort()"></i> </div>`);
 
-
-// Sort Note 
-function transcriptAscending() {
-    let content = document.getElementById('transcript');
-    const wrapper = document.querySelector('.Order2');
-
-    let clone = document.querySelector('.Order2').cloneNode(true);
-    content.innerHTML = "";
-    document.querySelector('#transcript').appendChild(clone);
-
-    wrapper.outerHTML = wrapper.innerHTML;
-    let lines = noteFile.reverse();
-    for (var i = 0; i < lines.length; i++) {
-        // split Time
-        var dPosition = lines[i].lastIndexOf(":");
-        var time = lines[i].substring(0, dPosition);
-        // Split Text
-        var text = lines[i].substring(lines[i].lastIndexOf(':') + 1);
-
-        content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${time}</span>${text}</p>`);
-
+    if (isSub) {
+        objSubtitle.sort((a, b) => b.ti.localeCompare(a.ti));
+        for (var i = 0; i < objSubtitle.length; i++) {
+            content1.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objSubtitle[i].ti}</span>${objSubtitle[i].te}</p>`);
+        }
+        isSub = false;
+    }
+    else {
+        objSubtitle.sort((a, b) => a.ti.localeCompare(b.ti));
+        for (var i = 0; i < objSubtitle.length; i++) {
+            content1.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objSubtitle[i].ti}</span>${objSubtitle[i].te}</p>`);
+        }
+        isSub = true;
     }
 }
 
 
-// Sort Note 
-function subtitleAscending() {
-    let content = document.getElementById('note');
-    const wrapper = document.querySelector('.Order1');
-
-    let clone = document.querySelector('.Order1').cloneNode(true);
-    content.innerHTML = "";
-    document.querySelector('#note').appendChild(clone);
-
-    wrapper.outerHTML = wrapper.innerHTML;
-    let lines = subTitleFile.reverse();
-    for (var i = 0; i < lines.length; i++) {
-        // split Time
-        var dPosition = lines[i].lastIndexOf(":");
-        var time = lines[i].substring(0, dPosition);
-        // Split Text
-        var text = lines[i].substring(lines[i].lastIndexOf(':') + 1);
-
-        content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${time}</span>${text}</p>`);
-
+// objNote
+var isNote = true;
+function transcriptSort() {
+    var content = document.querySelector('#transcript');
+    content.innerHTML = '';
+    content.insertAdjacentHTML('afterbegin', `<div class="Order2"> <i class="fas fa-sort" onclick="transcriptSort()"></i> </div>`);
+    if (isNote) {
+        objNote.sort((a, b) => b.ti.localeCompare(a.ti));
+        for (var i = 0; i < objNote.length; i++) {
+            content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objNote[i].ti}</span>${objNote[i].te}</p>`);
+        }
+        isNote = false;
+    }
+    else {
+        objNote.sort((a, b) => a.ti.localeCompare(b.ti));
+        for (var i = 0; i < objNote.length; i++) {
+            content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objNote[i].ti}</span>${objNote[i].te}</p>`);
+        }
+        isNote = true;
     }
 }
+
+
+
+
+
+
