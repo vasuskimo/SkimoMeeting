@@ -28,6 +28,8 @@ document.getElementById("defaultOpen").click();
 
 let objNote = [];
 let objSubtitle = [];
+let noteTimeList = null;
+let noteHighlightDuration = 5;
 
 //load subtitles.txt 
 function subtitleFile() {
@@ -86,8 +88,9 @@ function annotationsTextFile() {
             }
             objNote.sort((a, b) => a.ti.localeCompare(b.ti));
             for (var i = 0; i < objNote.length; i++) {
-                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span>${objNote[i].ti}</span>${objNote[i].te}</p>`);
+                content.insertAdjacentHTML('beforeend', `<p id="getid"> <i class="circle"></i> <span class="noteTime">${objNote[i].ti}</span><span class="noteContent">${objNote[i].te}</span></p>`);
             }
+            noteTimeList = document.querySelectorAll(".noteTime");
         })
         .catch((error) => {
             console.log(error);
@@ -133,6 +136,7 @@ document.addEventListener('click', function (event) {
 
                 player.addEventListener("timeupdate", function () {
                     const played = player.currentTime;
+                    console.log(played);
                     document.querySelector("#currentVideoTime").innerHTML = new Date(played * 1000).toISOString().substr(11, 8);
                     //const duration = player.duration.toFixed(1);
                     // document.querySelector("#currentVideoTime").innerHTML += "Zeit bis Ende " + (duration - played).toFixed(1);
@@ -144,6 +148,39 @@ document.addEventListener('click', function (event) {
 }, false);
 
 
+// Notes highlight
+const player = document.getElementById("player");
+player.addEventListener("timeupdate", function () {
+    const played = player.currentTime;
+    for (let noteTime of noteTimeList) {
+        let noteTimeNode = noteTime;
+        noteTimeNode.nextSibling.classList.remove("active");
+
+        if (noteTimeNode.innerText > formatSeconds(played)) {
+            let difference = formatTime(noteTimeNode.innerText) - formatTime(formatSeconds(played));
+
+            if (difference <= noteHighlightDuration && difference >= 0) {
+                noteTimeNode.nextSibling.classList.add("active");
+            }
+        }
+    }
+}, false);
+
+// Convert time to seconds format
+function formatTime(hms) {
+    let a = hms.split(':'); // split it at the colons
+
+    // minutes are worth 60 seconds. Hours are worth 60 minutes.
+    return (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+}
+
+// Convert seconds to time format
+function formatSeconds(seconds)
+{
+    let date = new Date(1970,0,1);
+    date.setSeconds(seconds);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+}
 
 function hiddenCircle() {
     let circle = document.querySelectorAll('#getid i');
