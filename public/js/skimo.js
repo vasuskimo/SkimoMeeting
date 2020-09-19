@@ -40,18 +40,18 @@ function updateURL() {
     }
 }
 
-var subTitleMap;
-var noteMap;
+let subTitleMap;
+let noteMap;
 
 function convertSubFileToPairs(filePath) {
-    var rawFile = new XMLHttpRequest();
+    let rawFile = new XMLHttpRequest();
     rawFile.open("GET", filePath, false);
     rawFile.onreadystatechange = function () {
         if (rawFile.readyState === 4) {
             if (rawFile.status === 200 || rawFile.status == 0) {
-                var fileText = rawFile.responseText;
+                let fileText = rawFile.responseText;
                 // split into lines
-                var lines = fileText.split("\n");
+                let lines = fileText.split("\n");
                 // Split lines into time,text pairs
                 subTitleMap = lines
                 // split into an array right after the time
@@ -65,21 +65,20 @@ function convertSubFileToPairs(filePath) {
             }
         }
 
-    }
+    };
     rawFile.send(null);
     console.log(subTitleMap);
 }
 
 function convertAnnotationFileToPairs(filePath) {
-    var rawFile = new XMLHttpRequest();
+    let rawFile = new XMLHttpRequest();
     rawFile.open("GET", filePath, false);
     rawFile.onreadystatechange = function () {
         if (rawFile.readyState === 4) {
             if (rawFile.status === 200 || rawFile.status == 0) {
-                console.log("rawfile: ", rawFile);
-                var fileText = rawFile.responseText;
+                let fileText = rawFile.responseText;
                 // split into lines
-                var lines = fileText.split("\n");
+                let lines = fileText.split("\n");
                 // Split lines into time,text pairs
                 noteMap = lines
                 // split into an array right after the time
@@ -91,7 +90,6 @@ function convertAnnotationFileToPairs(filePath) {
                     // Make sure the whole thing is properly sorted
                     .sort((a, b) => convertTimeToSeconds(a.time) - convertTimeToSeconds(b.time))
 
-                rawFile.send(null);
                 var html = '';
                 for (let i = 0; i < noteMap.length; i++) {
 
@@ -101,8 +99,9 @@ function convertAnnotationFileToPairs(filePath) {
 
             }
         }
-
     }
+
+    rawFile.send(null);
 
 }
 
@@ -237,7 +236,6 @@ function updateSearchResults() {
     if (isEmpty(query)) {
         slideSearchResults = [];
     } else {
-        console.log("entered else block")
         // Make an array...
         slideSearchResults = Array
         // ...from all of the hidden inputs
