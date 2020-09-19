@@ -156,7 +156,7 @@ function hiddenCircle() {
 
 
 // objSubtitle
-var isSub = true;
+let isSub = true;
 function subtitleSort() {
     var content1 = document.querySelector('#note');
     content1.innerHTML = '';
@@ -180,9 +180,9 @@ function subtitleSort() {
 
 
 // objNote
-var isNote = true;
+let isNote = true;
 function transcriptSort() {
-    var content = document.querySelector('#transcript');
+    let content = document.querySelector('#transcript');
     content.innerHTML = '';
     content.insertAdjacentHTML('afterbegin', `<div class="Order2"> <i class="fas fa-sort" onclick="transcriptSort()"></i> </div>`);
     if (isNote) {
