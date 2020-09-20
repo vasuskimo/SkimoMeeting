@@ -110,13 +110,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener('click', function (event) {
     hiddenCircle();
-    if (event.target.matches('#getid')) {
+    if (event.target.matches('#getid') || event.target.matches('span')) {
+        let e = event.target;
+        if (event.target.matches('span')) {
+            e = event.target.parentNode;
+        }
         event.preventDefault();
-        if (event.target.closest('p')) {
-            var currentTime = event.target.querySelector('span').innerText;
+        if (e.closest('p')) {
+            var currentTime = e.querySelector('span').innerText;
         }
 
-        let circle = event.target.querySelector('i');
+        let circle = e.querySelector('i');
         circle.style.visibility = "visible";
 
         var a = currentTime.split(':');
@@ -136,7 +140,7 @@ document.addEventListener('click', function (event) {
 
                 player.addEventListener("timeupdate", function () {
                     const played = player.currentTime;
-                    console.log(played);
+                    // console.log(played);
                     document.querySelector("#currentVideoTime").innerHTML = new Date(played * 1000).toISOString().substr(11, 8);
                     //const duration = player.duration.toFixed(1);
                     // document.querySelector("#currentVideoTime").innerHTML += "Zeit bis Ende " + (duration - played).toFixed(1);
@@ -154,13 +158,13 @@ player.addEventListener("timeupdate", function () {
     const played = player.currentTime;
     for (let noteTime of noteTimeList) {
         let noteTimeNode = noteTime;
-        noteTimeNode.nextSibling.classList.remove("active");
+        noteTimeNode.parentNode.classList.remove("active");
 
-        if (noteTimeNode.innerText > formatSeconds(played)) {
-            let difference = formatTime(noteTimeNode.innerText) - formatTime(formatSeconds(played));
+        if (noteTimeNode.innerText <= formatSeconds(played)) {
+            let difference = formatTime(formatSeconds(played)) - formatTime(noteTimeNode.innerText);
 
             if (difference <= noteHighlightDuration && difference >= 0) {
-                noteTimeNode.nextSibling.classList.add("active");
+                noteTimeNode.parentNode.classList.add("active");
             }
         }
     }
