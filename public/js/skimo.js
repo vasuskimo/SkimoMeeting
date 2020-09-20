@@ -95,7 +95,9 @@ function convertAnnotationFileToPairs(filePath) {
 
                     html += '<p class="link" style="text-decoration: underline" onclick="link(this)" link="source.mp4#t=' + toSecs(noteMap[i].time) + '" >' + noteMap[i].time + ' ' + noteMap[i].text + '</p>';
                 }
-                document.getElementById('notes').innerHTML = html;
+                if (document.getElementById('notes')) {
+                    document.getElementById('notes').innerHTML = html;
+                }
 
             }
         }
