@@ -14,7 +14,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                "/**/skimo.html","/skimo/**","/about.html", "/**/*.css", 
                "/**/*.png", "/**/*.js","/**/*.mp4", "/**/skimo.html","/**/*.sub",
                "/copyright.html", "/privacy.html", "/plans.html", "/terms.html","/SkimoLongView.pdf",
-               "/**/*.zip", "/live/recording", "/zip/**", "/user","/live/**"
+               "/**/*.zip", "/live/recording", "/zip/**", "/user","/live/**","/**/*.txt"
        };
 
       http
