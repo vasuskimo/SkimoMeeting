@@ -74,8 +74,7 @@ public class SkimoMeetingController {
 		{
 			String st = filesList.get(i).replace(".zip", "");
 			String st2 = st.replace("files", "skimo");
-			if(st2.length() > 10)
-				urlList.add(st2);
+			urlList.add(st2);
 		}
 		if(urlList.size() ==0)
 		{
