@@ -86,7 +86,7 @@ public class StorageServiceImpl implements StorageService {
 			return Files.walk(this.rootLocation, 1)
 				.filter(path -> !path.equals(this.rootLocation))
 				.filter(f -> f.getFileName().toString().endsWith(".zip"))
-				.filter(f -> f.getFileName().toString().length() < 10)
+				.filter(f -> f.getFileName().toString().length() < 15)
 				
 				.map(this.rootLocation::relativize);
 		}
