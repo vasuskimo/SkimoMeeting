@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import tv.skimo.meeting.utils.AssetType;
 import tv.skimo.meeting.utils.Status;
 
 import java.sql.Timestamp;
