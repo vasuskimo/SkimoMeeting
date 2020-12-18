@@ -39,6 +39,10 @@ import org.slf4j.LoggerFactory;
 
 import tv.skimo.engine.SkimoEngine;
 import tv.skimo.meeting.lib.StorageFileNotFoundException;
+import tv.skimo.meeting.model.Asset;
+import tv.skimo.meeting.model.AssetRepository;
+import tv.skimo.meeting.model.User;
+import tv.skimo.meeting.model.UserRepository;
 import tv.skimo.meeting.services.StorageService;
 import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
@@ -52,6 +56,12 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 public class SkimoMeetingController {
 
 	private final StorageService storageService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private AssetRepository assetRepository;
 	
     private static final Logger log=LoggerFactory.getLogger(SkimoMeetingController.class);
 	
@@ -116,6 +126,8 @@ public class SkimoMeetingController {
 	{
 		log.info("Inside My Skimo post method");
 		OAuth2User user = getCurrentUser();
+		String name = (String) user.getAttributes().get("name");
+		String picture = (String) user.getAttributes().get("picture");
 		String email = (String) user.getAttributes().get("email");
 	    log.info("email is " + email);
 	      
@@ -133,9 +145,34 @@ public class SkimoMeetingController {
 			annotationFileName = annotationFile.get().getOriginalFilename();
 		}
 		assetId = AssetUtil.createHash(Constants.UPLOAD_DIR + accName , file.getOriginalFilename());
+						
+	    User userEntity = new User();
+	    userEntity.setEmail(email);
+	    userEntity.setName(name);
+	    userEntity.setPicture(picture);
+	    try
+	    {
+	    	userRepository.save(userEntity);
+	    }
+	    catch(Exception e)
+	    {
+			log.info("There is already an entry for this email address " + email);
+	    }
 
 		if(AssetUtil.CreateAssetDirAndMoveFiles(Constants.UPLOAD_DIR + accName, assetId, file.getOriginalFilename(), annotationFileName))
 		{
+		    Asset assetEntity = new Asset();
+		    assetEntity.setAssetId(assetId);
+		    assetEntity.setEmail(email);
+		    try
+		    {
+		    	assetRepository.save(assetEntity);
+		    }
+		    catch(Exception e)
+		    {
+				log.info("There is already an entry for this assetId " + assetId);
+		    }
+		    
 			try 
 			{
 				if(EngineStatus.isBusy())
@@ -144,9 +181,7 @@ public class SkimoMeetingController {
 				}
 				else
 				{
-					SkimoEngine.generatePoster(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);	
-					SkimoEngine.generateThumbnails(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
-					SkimoEngine.detectScenes(Constants.PUBLIC + accName + assetId + Constants.ASSET_NAME, assetId);
+					SkimoEngine.generateSkimo(assetId);
 				}
 			} 
 			catch (IOException e) 
