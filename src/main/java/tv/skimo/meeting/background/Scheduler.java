@@ -23,7 +23,6 @@ import tv.skimo.engine.SkimoEngine;
 import tv.skimo.meeting.lib.FileSorter;
 import tv.skimo.meeting.lib.ThymeLeafConfig;
 import tv.skimo.meeting.model.Skimo;
-import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
 import tv.skimo.meeting.utils.EngineStatus;
 import tv.skimo.meeting.utils.LineCounter;
@@ -64,13 +63,7 @@ public class Scheduler
 						if(assetDirs.length < 1)
 						{
 							log.info("Background task: kicking off Skimo for " + assetId);
-							AssetUtil.provisionAsset(assetId, Constants.PUBLIC + assetId + Constants.ASSET_NAME);
-							SkimoEngine.generatePoster(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
-							SkimoEngine.generateThumbnails(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-							SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-							SkimoEngine.generateSRT(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
-							SkimoEngine.generateSub(assetId);
-							SkimoEngine.generateSummary(assetId);
+							SkimoEngine.generateSkimo(assetId);
 						}
 				        File indexFile = new File(Constants.PUBLIC + assetId + "/skimo.html");
 					    if(!indexFile.exists())
