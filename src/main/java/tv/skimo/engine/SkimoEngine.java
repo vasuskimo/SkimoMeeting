@@ -16,11 +16,23 @@ import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import tv.skimo.meeting.lib.ProcessLauncher;
 import tv.skimo.meeting.lib.SRTParser;
+import tv.skimo.meeting.utils.AssetUtil;
 import tv.skimo.meeting.utils.Constants;
  
 public class SkimoEngine
 { 
 	private static final Logger log = LoggerFactory.getLogger(SkimoEngine.class);
+	
+	public static void generateSkimo(String assetId)
+	{
+		AssetUtil.provisionAsset(assetId, Constants.PUBLIC + assetId + Constants.ASSET_NAME);
+		SkimoEngine.generatePoster(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);	
+		SkimoEngine.generateThumbnails(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+		SkimoEngine.detectScenes(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+		SkimoEngine.generateSRT(Constants.PUBLIC + assetId + Constants.ASSET_NAME, assetId);
+		SkimoEngine.generateSub(assetId);
+		SkimoEngine.generateSummary(assetId);
+	}
 
 	public static void generatePoster(String asset, String assetId)
 	{
